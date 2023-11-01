@@ -27,6 +27,9 @@ Route::get('/gallery/album/{id}', [GalleryController::class, 'showAlbumImages'])
 Route::get('/booking/{packageId}', [BookingController::class, 'showBookingForm'])->name('booking.form');
 Route::post('/store-booking', [BookingController::class, 'store'])->name('store.booking');
 
+Route::get('/admin-bookings', [BookingController::class, 'bookingManagement'])->name('booking-management');
+Route::get('/admin-packages', [PackageController::class, 'packagesManagement'])->name('package-management');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

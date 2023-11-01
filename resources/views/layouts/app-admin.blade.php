@@ -28,6 +28,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Data Table -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+
 </head>
 <style>
     * {
@@ -169,17 +173,6 @@
         letter-spacing: 1px;
     }
 
-    /* cirlce btn */
-    .btn-circle {
-        width: 33px;
-        height: 33px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-size: 10px;
-    }
-
     .badge {
         background-color: #dfeeff;
     }
@@ -270,7 +263,7 @@
     }
 
     .navigation-sidebar .navbar-sb-link:hover * {
-        color: var(--cyan-color);
+        color: #9D0520;
     }
 
     .navigation-sidebar .navbar-sb-text {

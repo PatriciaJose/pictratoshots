@@ -43,30 +43,30 @@
                     <h5 class="text-uppercase text-grey navbar-sb-item-title fs-12 ls-1">Management</h5>
                     <ul class="navbar-sb-links p-0 list-unstyled">
                         <li class="navbar-sb-link my-3">
-                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between">
+                            <a href="{{ route('booking-management') }}" class="text-decoration-none d-flex align-items-center justify-content-between">
                                 <div class="text-light-blue d-flex align-items-center">
                                     <span class="navbar-sb-icon me-3">
-                                        <i class="fas fa-award"></i>
+                                        <i class="fa-solid fa-book"></i>
                                     </span>
                                     <span class="navbar-sb-text fs-14 fw-5 text-capitalize">Bookings</span>
                                 </div>
                             </a>
                         </li>
                         <li class="navbar-sb-link my-3">
-                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between">
+                            <a href="" class="text-decoration-none d-flex align-items-center justify-content-between">
                                 <div class="text-light-blue d-flex align-items-center">
                                     <span class="navbar-sb-icon me-3">
-                                        <i class="fa-solid fa-paper-plane"></i>
+                                        <i class="fa-solid fa-image"></i>
                                     </span>
                                     <span class="navbar-sb-text fs-14 fw-5 text-capitalize">Gallery</span>
                                 </div>
                             </a>
                         </li>
                         <li class="navbar-sb-link my-3">
-                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between">
+                            <a href="{{ route('package-management') }}" class="text-decoration-none d-flex align-items-center justify-content-between">
                                 <div class="text-light-blue d-flex align-items-center">
                                     <span class="navbar-sb-icon me-3">
-                                        <i class="fa-brands fa-whatsapp"></i>
+                                        <i class="fa-solid fa-box"></i>
                                     </span>
                                     <span class="navbar-sb-text fs-14 fw-5 text-capitalize">Packages</span>
                                 </div>
@@ -79,7 +79,7 @@
                     <h5 class="text-uppercase text-grey navbar-sb-item-title fs-12 ls-1">priority</h5>
                     <ul class="navbar-sb-links p-0 list-unstyled">
                         <li class="navbar-sb-link my-3">
-                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between">
+                            <a href="{{ route('home') }}" class="text-decoration-none d-flex align-items-center justify-content-between">
                                 <div class="text-light-blue d-flex align-items-center">
                                     <span class="navbar-sb-icon me-3">
                                         <i class="fa-solid fa-gauge"></i>
@@ -108,7 +108,7 @@
                             <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between">
                                 <div class="text-light-blue d-flex align-items-center">
                                     <span class="navbar-sb-icon me-3">
-                                        <i class="fa-regular fa-circle-user"></i>
+                                        <i class="fa-solid fa-users"></i>
                                     </span>
                                     <span class="navbar-sb-text fs-14 fw-5 text-capitalize">users</span>
                                 </div>

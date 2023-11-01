@@ -43,4 +43,12 @@ class BookingController extends Controller
 
         return redirect()->route('packages')->with('message', 'Booking successful!');
     }
+
+    // admin
+    public function bookingManagement()
+    {
+        $bookings = Booking::with(['package', 'client'])->get();
+
+        return view('admin.admin-bookings', compact('bookings'));
+    }
 }

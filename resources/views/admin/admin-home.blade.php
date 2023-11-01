@@ -24,13 +24,10 @@
                         <a href="#" class="text-decoration-none">
                             <div class="overview-section-item bg-white p-4">
                                 <div class="item-top d-flex align-items-center justify-content-between mb-3">
-                                    <p class="text-grey mb-0">Total Balance</p>
-                                    <span class="info-icon d-flex align-items-center justify-content-center bg-grey text-white fs-8">
-                                        <i class="fa-solid fa-question"></i>
-                                    </span>
+                                    <p class="text-grey mb-0">Pending</p>
                                 </div>
                                 <div class="item-title text-cyan fs-4 fw-6 mb-1">
-                                    R91 <span class="text-blue">Account credit</span>
+                                    <span class="text-blue">100</span>
                                 </div>
                                 <div class="item-bottom d-flex align-items-center justify-content-between">
                                     <div class="earnings me-3">
@@ -57,16 +54,13 @@
                         <a href="#" class="text-decoration-none">
                             <div class="overview-section-item bg-white p-4">
                                 <div class="item-top d-flex align-items-center justify-content-between mb-3">
-                                    <p class="text-grey mb-0">Account Rank</p>
-                                    <span class="info-icon d-flex align-items-center justify-content-center bg-grey text-white fs-8">
-                                        <i class="fa-solid fa-question"></i>
-                                    </span>
+                                    <p class="text-grey mb-0">Approved</p>
                                 </div>
                                 <div class="item-title text-cyan fs-4 fw-bold mb-1">
                                     <span>
                                         <i class="fas fa-award"></i>
                                     </span>
-                                    <span class="text-blue fs-4 fw-6">Silver Rank</span>
+                                    <span class="text-blue fs-4 fw-6">10</span>
                                 </div>
                                 <div class="item-bottom d-flex align-items-center justify-content-between">
                                     <div class="earnings me-3">
@@ -86,18 +80,25 @@
                     <div class="col-md-6 col-lg-4">
                         <a href="#" class="text-decoration-none">
                             <div class="overview-section-item bg-white p-4">
-                                <div class="item-title text-cyan fs-3 fw-bold mb-1">
+                                <div class="item-top d-flex align-items-center justify-content-between mb-3">
+                                    <p class="text-grey mb-0">Disapproved</p>
+                                </div>
+                                <div class="item-title text-cyan fs-4 fw-bold mb-1">
                                     <span>
-                                        <i class="fa-solid fa-network-wired"></i>
+                                        <i class="fas fa-award"></i>
                                     </span>
-                                    <span class="text-blue fs-4 fw-6">Bonus</span>
+                                    <span class="text-blue fs-4 fw-6">3</span>
                                 </div>
                                 <div class="item-bottom d-flex align-items-center justify-content-between">
                                     <div class="earnings me-3">
-                                        <span class="text-grey">You have <span class="text-grey-blue">2 downlines </span>
-                                            <span class="text-blue">Withdraw</span></span>
+                                        <span class="text-grey-blue">
+                                            <i class="fas fa-signal"></i>
+                                        </span>
+                                        <span class="fs-15">Earned <span class="text-cyan">45</span> until rank expires </span>
                                     </div>
-                                    <button type="button" class="btn-outline-sm text-blue d-block mt-2 px-2">Copy referral link</button>
+                                    <span class="balance-icon align-self-end fs-20">
+                                        <i class="fa-solid fa-wallet"></i>
+                                    </span>
                                 </div>
                             </div>
                         </a>

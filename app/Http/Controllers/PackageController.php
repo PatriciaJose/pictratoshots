@@ -23,4 +23,10 @@ class PackageController extends Controller
 
         return view('clients.services', compact('packages', 'photoshootTypes', 'selectedType'));
     }
+
+    // admin
+    public function packagesManagement()
+    {
+        return view('admin.admin-packages');
+    }
 }
