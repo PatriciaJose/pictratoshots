@@ -6,10 +6,10 @@
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                    <x-nav-link :href="route('gallery')" :active="request()->routeIs('gallery')">
                         {{ __('Gallery') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                    <x-nav-link :href="route('packages')" :active="request()->routeIs('packages')">
                         {{ __('Services') }}
                     </x-nav-link>
                 </div>
@@ -19,11 +19,11 @@
                     <x-application-logo class="block w-auto fill-current" />
                 </a>
             </div>
-            <div class="hidden space-x-8 sm:flex sm:items-center pe-5" >
+            <div class="hidden space-x-8 sm:flex sm:items-center pe-5">
                 <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                     <i class="fa-solid fa-bell"></i>
                 </x-nav-link>
-                <x-dropdown align="right" width="48" >
+                <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md  bg-transparent hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>

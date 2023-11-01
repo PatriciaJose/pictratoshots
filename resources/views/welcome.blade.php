@@ -21,6 +21,31 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgb(92, 73, 255) rgb(255, 255, 255);
+        }
+
+        /* Works on Chrome, Edge, and Safari */
+        *::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background: #fffaf1;
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background-color: #D4D4D4;
+            border-radius: 20px;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Orbitron', sans-serif;
             overflow-x: hidden;
@@ -719,8 +744,6 @@
         }
 
         /* End Footer */
-
-        /* End Footer */
     </style>
 </head>
 
@@ -771,14 +794,14 @@
     </nav>
     <div class="container-fluid banner">
         <div id="slide">
-            <div class="item" style="background-image: url('{{ asset('images/camera.jpg') }}');">
+            <div class="item" style="background-image: url('/images/camera.jpg');">
                 <div class="content">
                     <div class="name">LUNDEV</div>
                     <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anhchay mat tieu</div>
                     <button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Contact Us</button>
                 </div>
             </div>
-            <div class="item" style="background-image: url('{{ asset('images/studio.jpg') }}');">
+            <div class="item" style="background-image: url('/images/studio.jpg');">
                 <div class="content">
                     <div class="name">LUNDEV</div>
                     <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anh chay mat tieu</div>
@@ -786,21 +809,20 @@
                 </div>
             </div>
 
-            <div class="item" style="background-image: url('{{ asset('images/camera.jpg') }}');">
+            <div class="item" style="background-image: url('/images/camera.jpg');">
                 <div class="content">
                     <div class="name">LUNDEV</div>
                     <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anhchay mat tieu</div>
                     <button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Contact Us</button>
                 </div>
             </div>
-            <div class="item" style="background-image: url('{{ asset('images/studio.jpg') }}');">
+            <div class="item" style="background-image: url('/images/studio.jpg');">
                 <div class="content">
                     <div class="name">LUNDEV</div>
                     <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anh chay mat tieu</div>
                     <button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Book Now</button>
                 </div>
             </div>
-
         </div>
         <div class="buttons">
             <button id="prev"><i class="fa-solid fa-angle-left"></i></button>

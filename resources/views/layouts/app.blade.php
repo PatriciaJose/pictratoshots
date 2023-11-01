@@ -23,8 +23,36 @@
     <script src="https://kit.fontawesome.com/5a10e0b94b.js" crossorigin="anonymous"></script>
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Toastr -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(92, 73, 255) rgb(255, 255, 255);
+    }
+    *::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: #fffaf1;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: #D4D4D4;
+        border-radius: 20px;
+    }
+
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
     body {
         font-family: 'Orbitron', sans-serif;
         overflow-x: hidden;
@@ -208,13 +236,12 @@
         border-color: grey;
     }
 
-    .gallery .gallery-item {
-        width: calc(100% / 3);
-        padding: 15px;
-    }
-
-    .gallery .gallery-item-inner img {
-        width: 100%;
+ 
+    .gallery-item-inner .card{
+        width:calc(100% * 3) ;
+        box-shadow: none;
+        border-bottom: 1px #92999f solid;
+        border-top: 1px #92999f solid;
     }
 
     .gallery .gallery-item.show {
@@ -741,6 +768,8 @@
     <main>
         {{ $slot }}
     </main>
+
+    @include('layouts.footer')
 
 </body>
 
