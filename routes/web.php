@@ -26,6 +26,7 @@ Route::get('/gallery/album/{id}', [GalleryController::class, 'showAlbumImages'])
 
 Route::get('/booking/{packageId}', [BookingController::class, 'showBookingForm'])->name('booking.form');
 Route::post('/store-booking', [BookingController::class, 'store'])->name('store.booking');
+Route::get('/events', [BookingController::class, 'getEvents'])->name('events');
 
 Route::get('/admin-bookings', [BookingController::class, 'bookingManagement'])->name('booking-management');
 Route::get('/admin-packages', [PackageController::class, 'packagesManagement'])->name('package-management');

@@ -48,7 +48,28 @@ class BookingController extends Controller
     public function bookingManagement()
     {
         $bookings = Booking::with(['package', 'client'])->get();
+        $acceptedBookings = $bookings->filter(function ($booking) {
+            return $booking->status === 'Approved';
+        });
 
-        return view('admin.admin-bookings', compact('bookings'));
+        return view('admin.admin-bookings', compact('bookings', 'acceptedBookings'));
+    }
+    public function getEvents(Request $request)
+    {
+        $bookings = Booking::where('status', 'Approved')
+            ->orderBy('session_date')
+            ->orderBy('session_time')
+            ->get();
+
+        $events = [];
+        foreach ($bookings as $booking) {
+            $events[] = [
+                'title' => $booking->package->package_name,
+                'start' => $booking->session_date . 'T' . $booking->session_time,
+                'end' => $booking->session_date . 'T' . $booking->session_time,
+            ];
+        }
+
+        return response()->json($events);
     }
 }
