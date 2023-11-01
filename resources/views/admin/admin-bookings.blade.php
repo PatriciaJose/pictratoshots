@@ -5,7 +5,6 @@
                 <div class="col-12 d-flex justify-content-between align-items-center">
                     <div class="dashboard-title-text">
                         <h2>Booking Management</h2>
-                        <p class="text-grey">ksjkaskhjahjdfjashfjsaj</p>
                     </div>
                 </div>
             </div>
@@ -40,12 +39,18 @@
                                 <td>{{ $booking->status }}</td>
                                 <td>
                                     @if ($booking->status == 'Pending')
-                                    <button class="btn btn-primary">Accept</button>
-                                    <button class="btn btn-danger">Reject</button>
+                                    <button class="btn btn-primary btn-sm">Accept</button>
+                                    <button class="btn btn-danger btn-sm">Reject</button>
                                     @elseif ($booking->status == 'Approved')
-                                    Scheduled
+                                    <div class="text-center">
+                                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#smsModal">
+                                            <i class="fa-solid fa-comment-sms"></i>
+                                        </button>
+                                        <button class="btn btn-success btn-sm"><i class="fa-solid fa-cloud-sun"></i></button>
+                                        <button class="btn btn-info btn-sm mt-2" style="width:100%">Done</button>
+                                    </div>
                                     @elseif ($booking->status == 'Disapproved')
-                                    <button class="btn btn-info">Add Reason</button>
+                                    <button class="btn btn-info btn-sm">Add Reason</button>
                                     @endif
                                 </td>
                             </tr>
@@ -56,6 +61,46 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventModalLabel">Booking Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Client's Email:</strong> <span id="eventEmail"></span></p>
+                    <p><strong>Package Availed:</strong> <span id="eventTitle"></span></p>
+                    <p><strong>Session Date and Time:</strong> <span id="eventStart"></span></p>
+                    <p><strong>Location:</strong> <span id="eventLocation"></span></p>
+                    <!-- Add more event details here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="smsModal" tabindex="-1" role="dialog" aria-labelledby="smsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{ route('send-sms') }}" method="post">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="smsModalLabel">Send SMS to Client</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                        <label for="smsContent">SMS Content:</label>
+                        <textarea class="form-control" name="smsContent" id="smsContent" rows="3"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send SMS</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
             $('#table_id').DataTable();
@@ -64,10 +109,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
-
+            var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 events: "{{ route('events') }}",
+                extraParams: {
+                    _token: csrfToken
+                },
                 color: 'green',
                 selectable: true,
                 selectHelper: true,
@@ -77,6 +125,29 @@
                     right: 'dayGridMonth,dayGridWeek,dayGridDay'
                 },
                 eventColor: '#378006',
+                eventClick: function(info) {
+                    $('#eventTitle').text(info.event.title);
+
+                    // Format the start date and time in October date format
+                    const startDate = new Date(info.event.start);
+                    const options = {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    };
+                    const formattedDate = startDate.toLocaleString('en-US', options);
+
+                    $('#eventStart').text(formattedDate);
+
+                    $('#eventLocation').text(info.event.extendedProps.location);
+                    $('#eventEmail').text(info.event.extendedProps.email);
+
+                    $('#eventModal').modal('show');
+                },
+
+
             });
 
             calendar.render();

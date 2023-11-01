@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Twilio\Rest\Client;
 use App\Models\Booking;
 use App\Models\Package;
 use App\Models\User;
@@ -56,10 +56,7 @@ class BookingController extends Controller
     }
     public function getEvents(Request $request)
     {
-        $bookings = Booking::where('status', 'Approved')
-            ->orderBy('session_date')
-            ->orderBy('session_time')
-            ->get();
+        $bookings = Booking::where('status', 'Approved')->get();
 
         $events = [];
         foreach ($bookings as $booking) {
@@ -67,9 +64,33 @@ class BookingController extends Controller
                 'title' => $booking->package->package_name,
                 'start' => $booking->session_date . 'T' . $booking->session_time,
                 'end' => $booking->session_date . 'T' . $booking->session_time,
+                'location' => $booking->location,
+                'email' => $booking->client->email,
             ];
         }
 
         return response()->json($events);
+    }
+
+    public function sendSms(Request $request)
+    {
+        $bookingId = $request->input('booking_id');
+        $smsContent = $request->input('smsContent');
+
+        $booking = Booking::find($bookingId);
+        $clientPhoneNumber = $booking->client->phone; 
+
+        
+        $twilio = new Client(config('services.twilio.sid'), config('services.twilio.token'));
+        $twilio->messages->create(
+            $clientPhoneNumber,
+            [
+                'from' => config('services.twilio.from'),
+                'body' => $smsContent,
+            ]
+        );
+
+
+        return redirect()->back()->with('success', 'SMS sent successfully.');
     }
 }

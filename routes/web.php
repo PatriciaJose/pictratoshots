@@ -28,6 +28,8 @@ Route::get('/booking/{packageId}', [BookingController::class, 'showBookingForm']
 Route::post('/store-booking', [BookingController::class, 'store'])->name('store.booking');
 Route::get('/events', [BookingController::class, 'getEvents'])->name('events');
 
+Route::post('/send-sms', [BookingController::class, 'sendSms'])->name('send-sms');
+
 Route::get('/admin-bookings', [BookingController::class, 'bookingManagement'])->name('booking-management');
 Route::get('/admin-packages', [PackageController::class, 'packagesManagement'])->name('package-management');
 
