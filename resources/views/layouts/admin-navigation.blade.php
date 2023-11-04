@@ -19,6 +19,9 @@
                         <button type="button" class="notification-btn text-grey-blue">
                             <i class="fa-regular fa-bell"></i>
                         </button>
+                        <a href="{{ route('admin.edit') }}"><button class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md  bg-transparent hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                            <div>Hi, {{ Auth::user()->name }}!</div>
+                        </button></a>
                     </div>
                 </div>
             </div>
@@ -105,7 +108,7 @@
                     <h5 class="text-uppercase text-grey navbar-sb-item-title fs-12 ls-1">account</h5>
                     <ul class="navbar-sb-links p-0 list-unstyled">
                         <li class="navbar-sb-link my-3">
-                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between">
+                            <a href="{{ route('admin.edit') }}" class="text-decoration-none d-flex align-items-center justify-content-between">
                                 <div class="text-light-blue d-flex align-items-center">
                                     <span class="navbar-sb-icon me-3">
                                         <i class="fa-regular fa-circle-user"></i>
@@ -115,7 +118,7 @@
                             </a>
                         </li>
                         <li class="navbar-sb-link my-3">
-                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between">
+                            <a href="{{ route('user.index') }}" class="text-decoration-none d-flex align-items-center justify-content-between">
                                 <div class="text-light-blue d-flex align-items-center">
                                     <span class="navbar-sb-icon me-3">
                                         <i class="fa-solid fa-users"></i>

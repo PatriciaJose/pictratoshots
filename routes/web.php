@@ -8,6 +8,7 @@ use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,6 +21,7 @@ Route::get('/post', [HomeController::class, 'post'])
 ->middleware(['auth', 'admin']);
 
 Route::get('/packages', [PackageController::class, 'index'])->name('packages');
+Route::get('/users', [UserController::class, 'index'])->name('user.index');
 
 
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery');
@@ -63,4 +65,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile-admin', [ProfileController::class, 'editAdmin'])->name('admin.edit');
+    Route::patch('/profile-admin', [ProfileController::class, 'updateAdmin'])->name('admin.update');
+    Route::delete('/profile-admin', [ProfileController::class, 'destroyAdmin'])->name('admin.destroy');
+});
 require __DIR__ . '/auth.php';
