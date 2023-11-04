@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
@@ -45,6 +46,11 @@ Route::get('/admin-packages', [PackageController::class, 'packagesManagement'])-
 Route::post('/packages', [PackageController::class, 'packageStore'])->name('packages.store');
 Route::put('/packages/{id}/update', [PackageController::class, 'update'])->name('packages.update');
 Route::delete('/packages/delete/{id}', [PackageController::class, 'delete'])->name('packages.delete');
+
+Route::get('/admin-events', [EventController::class, 'index'])->name('event.index');
+Route::post('/event/create', [EventController::class, 'eventStore'])->name('event.store');
+Route::put('/event/update', [EventController::class, 'updateEvent'])->name('event.update');
+Route::delete('/event/{id}', [EventController::class, 'deleteEvent'])->name('event.delete');
 
 
 

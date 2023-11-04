@@ -73,7 +73,7 @@
                             </a>
                         </li>
                         <li class="navbar-sb-link my-3">
-                            <a href="{{ route('package-management') }}" class="text-decoration-none d-flex align-items-center justify-content-between">
+                            <a href="{{ route('event.index') }}" class="text-decoration-none d-flex align-items-center justify-content-between">
                                 <div class="text-light-blue d-flex align-items-center">
                                     <span class="navbar-sb-icon me-3">
                                         <i class="fa-solid fa-gift"></i>
