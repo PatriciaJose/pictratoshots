@@ -40,7 +40,13 @@ Route::post('/send-sms', [BookingController::class, 'sendSms'])->name('send-sms'
 
 Route::get('/admin-bookings', [BookingController::class, 'bookingManagement'])->name('booking-management');
 Route::post('/update-booking-status', [BookingController::class, 'updateBookingStatus'])->name('update-booking-status');
+
 Route::get('/admin-packages', [PackageController::class, 'packagesManagement'])->name('package-management');
+Route::post('/packages', [PackageController::class, 'packageStore'])->name('packages.store');
+Route::put('/packages/{id}/update', [PackageController::class, 'update'])->name('packages.update');
+Route::delete('/packages/delete/{id}', [PackageController::class, 'delete'])->name('packages.delete');
+
+
 
 Route::get('/notifications/markAllAsRead', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

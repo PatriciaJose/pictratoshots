@@ -27,6 +27,46 @@ class PackageController extends Controller
     // admin
     public function packagesManagement()
     {
-        return view('admin.admin-packages');
+        $packages = Package::all();
+        $photoshootTypes = PhotoshootType::all();
+
+        return view('admin.admin-packages', compact('packages', 'photoshootTypes'));
+    }
+    public function packageStore(Request $request)
+    {
+        $data = $request->validate([
+            'package_name' => 'required',
+            'typeID' => 'required',
+            'package_desc' => 'required',
+            'price' => 'required',
+            'inclusions' => 'required',
+        ]);
+
+        Package::create($data);
+
+        return redirect()->route('package-management')->with('success', 'Package created successfully');
+    }
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'package_name' => 'required',
+            'typeID' => 'required',
+            'package_desc' => 'required',
+            'price' => 'required',
+            'inclusions' => 'required',
+        ]);
+
+        Package::find($id)->update($data);
+
+        return redirect()->route('package-management')->with('success', 'Package updated successfully');
+    }
+    public function delete($id)
+    {
+        $package = Package::find($id);
+        if (!$package) {
+            return response()->json(['message' => 'Package not found'], 404);
+        }
+        $package->delete();
+        return response()->json(['message' => 'Package deleted'], 200);
     }
 }
