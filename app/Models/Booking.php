@@ -3,6 +3,7 @@
 namespace App\Models;
 use App\Models\Package;
 use App\Models\User;
+use App\Models\Feedback;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,5 +29,10 @@ class Booking extends Model
     public function client()
     {
         return $this->belongsTo(User::class, 'clientID');
+    }
+
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class, 'feedbackID');
     }
 }

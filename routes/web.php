@@ -5,23 +5,55 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\FeedbackController;
+use App\Models\Feedback;
+use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
+use App\Models\PhotoshootType;
 
 Route::get('/', function () {
-    return view('welcome');
+    $photoshootTypes = PhotoshootType::with(['albums' => function ($query) {
+        $query->with(['images' => function ($query) {
+            $query->take(6);
+        }]);
+    }])->get();
+
+    $feedbacks = Feedback::all(); 
+    $feedbackData = [];
+    foreach ($feedbacks as $feedback) {
+        $booking = Booking::find($feedback->bookingID);
+        if ($booking) {
+            $user = User::find($booking->clientID);
+            $photoshootType = PhotoshootType::find($booking->package->typeID); 
+            if ($user && $photoshootType) {
+                $feedbackData[] = [
+                    'user' => $user,
+                    'feedback' => $feedback,
+                    'photoshootType' => $photoshootType,
+                ];
+            }
+        }
+    }
+
+    return view('welcome', compact('photoshootTypes', 'feedbackData'));
 });
 
+
+
 Route::get('/home', [HomeController::class, 'index'])
-->middleware(['auth', 'verified'])->name('home');
+    ->middleware(['auth', 'verified'])->name('home');
 
 Route::get('/post', [HomeController::class, 'post'])
-->middleware(['auth', 'admin']);
+    ->middleware(['auth', 'admin']);
 
 Route::get('/packages', [PackageController::class, 'index'])->name('packages');
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
+
+Route::get('/admin-feedback', [FeedbackController::class, 'index'])->name('feedback.index');
 
 
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery');
@@ -53,7 +85,6 @@ Route::get('/admin-events', [EventController::class, 'index'])->name('event.inde
 Route::post('/event/create', [EventController::class, 'eventStore'])->name('event.store');
 Route::put('/event/update', [EventController::class, 'updateEvent'])->name('event.update');
 Route::delete('/event/{id}', [EventController::class, 'deleteEvent'])->name('event.delete');
-
 
 
 Route::get('/notifications/markAllAsRead', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
