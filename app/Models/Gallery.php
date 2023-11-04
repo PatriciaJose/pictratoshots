@@ -10,7 +10,6 @@ class Gallery extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'typeID',
         'albumID',
         'image_path',
     ];

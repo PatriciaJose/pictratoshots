@@ -8,7 +8,7 @@
                         </button>
                         <div class="navbar-logo">
                             <div class="inline-flex items-center">
-                                <span><img src="{{ asset('images/Picture1.png') }}"></span>
+                                <span><img src="{{ asset('storage/images/Picture1.png') }}"></span>
                                 <p>&nbsp;</p>
                                 <h6 style="font-family: 'Orbitron', sans-serif;font-size:30px;">Pictratoshots</h6>
                             </div>
@@ -29,7 +29,7 @@
         <div class="navigation-sidebar bg-light-grey">
             <div class="navbar-sb-head d-flex justify-content-between align-items-center px-4">
                 <div class="inline-flex items-center">
-                    <span><img src="{{ asset('images/Picture1.png') }}" width="40"></span>
+                    <span><img src="{{ asset('storage/images/Picture1.png') }}" width="40"></span>
                     <p>&nbsp;</p>
                     <h6 class="mt-2" style="font-family: 'Orbitron', sans-serif;font-size:20px;">Pictratoshots</h6>
                 </div>
@@ -53,7 +53,7 @@
                             </a>
                         </li>
                         <li class="navbar-sb-link my-3">
-                            <a href="" class="text-decoration-none d-flex align-items-center justify-content-between">
+                            <a href="{{ route('admin.gallery') }}" class="text-decoration-none d-flex align-items-center justify-content-between">
                                 <div class="text-light-blue d-flex align-items-center">
                                     <span class="navbar-sb-icon me-3">
                                         <i class="fa-solid fa-image"></i>
@@ -69,6 +69,16 @@
                                         <i class="fa-solid fa-box"></i>
                                     </span>
                                     <span class="navbar-sb-text fs-14 fw-5 text-capitalize">Packages</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="navbar-sb-link my-3">
+                            <a href="{{ route('package-management') }}" class="text-decoration-none d-flex align-items-center justify-content-between">
+                                <div class="text-light-blue d-flex align-items-center">
+                                    <span class="navbar-sb-icon me-3">
+                                        <i class="fa-solid fa-gift"></i>
+                                    </span>
+                                    <span class="navbar-sb-text fs-14 fw-5 text-capitalize">Event Type</span>
                                 </div>
                             </a>
                         </li>
@@ -132,7 +142,6 @@
                                             <span class="navbar-sb-text fs-14 fw-5 text-capitalize">Logout</span>
                                         </button>
                                     </form>
-
                                 </div>
                             </a>
                         </li>

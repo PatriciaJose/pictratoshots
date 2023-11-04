@@ -1,14 +1,14 @@
 <x-app-layout>
     <div class="container-fluid banner">
         <div id="slide">
-            <div class="item" style="background-image: url('/images/camera.jpg');">
+            <div class="item" style="background-image: url('storage/images/camera.jpg');">
                 <div class="content">
                     <div class="name">LUNDEV</div>
                     <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anhchay mat tieu</div>
                     <button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Contact Us</button>
                 </div>
             </div>
-            <div class="item" style="background-image: url('/images/studio.jpg');">
+            <div class="item" style="background-image: url('storage/images/studio.jpg');">
                 <div class="content">
                     <div class="name">LUNDEV</div>
                     <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anh chay mat tieu</div>
@@ -16,14 +16,14 @@
                 </div>
             </div>
 
-            <div class="item" style="background-image: url('/images/camera.jpg');">
+            <div class="item" style="background-image: url('storage/images/camera.jpg');">
                 <div class="content">
                     <div class="name">LUNDEV</div>
                     <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anhchay mat tieu</div>
                     <button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Contact Us</button>
                 </div>
             </div>
-            <div class="item" style="background-image: url('/images/studio.jpg');">
+            <div class="item" style="background-image: url('storage/images/studio.jpg');">
                 <div class="content">
                     <div class="name">LUNDEV</div>
                     <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anh chay mat tieu</div>
@@ -211,32 +211,32 @@
             <div class="row">
                 <div class="gallery-item shoe">
                     <div class="gallery-item-inner">
-                        <img src="{{ asset('images/camera.jpg')}}" alt="shoe">
+                        <img src="{{ asset('storage/images/camera.jpg')}}" alt="shoe">
                     </div>
                 </div>
                 <div class="gallery-item headphone">
                     <div class="gallery-item-inner">
-                        <img src="{{ asset('images/camera.jpg')}}" alt="headphone">
+                        <img src="{{ asset('storage/images/camera.jpg')}}" alt="headphone">
                     </div>
                 </div>
                 <div class="gallery-item camera">
                     <div class="gallery-item-inner">
-                        <img src="{{ asset('images/camera.jpg')}}" alt="camera">
+                        <img src="{{ asset('storage/images/camera.jpg')}}" alt="camera">
                     </div>
                 </div>
                 <div class="gallery-item headphone">
                     <div class="gallery-item-inner">
-                        <img src="{{ asset('images/camera.jpg')}}" alt="headphone">
+                        <img src="{{ asset('storage/images/camera.jpg')}}" alt="headphone">
                     </div>
                 </div>
                 <div class="gallery-item camera">
                     <div class="gallery-item-inner">
-                        <img src="{{ asset('images/camera.jpg')}}" alt="camera">
+                        <img src="{{ asset('storage/images/camera.jpg')}}" alt="camera">
                     </div>
                 </div>
                 <div class="gallery-item headphone">
                     <div class="gallery-item-inner">
-                        <img src="{{ asset('images/camera.jpg')}}" alt="headphone">
+                        <img src="{{ asset('storage/images/camera.jpg')}}" alt="headphone">
                     </div>
                 </div>
             </div>
@@ -267,7 +267,7 @@
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <div class="card">
-                                    <div class="img-wrapper"><img src="{{ asset('images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('images/camera.jpg')}}"> </div>
+                                    <div class="img-wrapper"><img src="{{ asset('storage/images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('storage/images/camera.jpg')}}"> </div>
                                     <div class="card-body">
                                         <h5 class="card-title">Card title 1</h5>
                                         <i class="fa-solid fa-star text-warning pe-1"></i>
@@ -281,7 +281,7 @@
                             </div>
                             <div class="carousel-item">
                                 <div class="card">
-                                    <div class="img-wrapper"><img src="{{ asset('images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('images/camera.jpg')}}"> </div>
+                                    <div class="img-wrapper"><img src="{{ asset('storage/images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('storage/images/camera.jpg')}}"> </div>
                                     <div class="card-body">
                                         <h5 class="card-title">Card title 2</h5>
                                         <i class="fa-solid fa-star text-warning pe-1"></i>
@@ -295,7 +295,7 @@
                             </div>
                             <div class="carousel-item">
                                 <div class="card">
-                                    <div class="img-wrapper"><img src="{{ asset('images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('images/camera.jpg')}}"> </div>
+                                    <div class="img-wrapper"><img src="{{ asset('storage/images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('storage/images/camera.jpg')}}"> </div>
                                     <div class="card-body">
                                         <h5 class="card-title">Card title 3</h5>
                                         <i class="fa-solid fa-star text-warning pe-1"></i>
@@ -309,7 +309,7 @@
                             </div>
                             <div class="carousel-item">
                                 <div class="card">
-                                    <div class="img-wrapper"><img src="{{ asset('images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('images/camera.jpg')}}"> </div>
+                                    <div class="img-wrapper"><img src="{{ asset('storage/images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('storage/images/camera.jpg')}}"> </div>
                                     <div class="card-body">
                                         <h5 class="card-title">Card title 4</h5>
                                         <i class="fa-solid fa-star text-warning pe-1"></i>
@@ -323,7 +323,7 @@
                             </div>
                             <div class="carousel-item">
                                 <div class="card">
-                                    <div class="img-wrapper"><img src="{{ asset('images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('images/camera.jpg')}}"> </div>
+                                    <div class="img-wrapper"><img src="{{ asset('storage/images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('storage/images/camera.jpg')}}"> </div>
                                     <div class="card-body">
                                         <h5 class="card-title">Card title 5</h5>
                                         <i class="fa-solid fa-star text-warning pe-1"></i>
@@ -337,7 +337,7 @@
                             </div>
                             <div class="carousel-item">
                                 <div class="card">
-                                    <div class="img-wrapper"><img src="{{ asset('images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('images/camera.jpg')}}"> </div>
+                                    <div class="img-wrapper"><img src="{{ asset('storage/images/camera.jpg')}}" class="d-block w-100" alt="{{ asset('storage/images/camera.jpg')}}"> </div>
                                     <div class="card-body">
                                         <h5 class="card-title">Card title 6</h5>
                                         <i class="fa-solid fa-star text-warning pe-1"></i>

@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('galleries', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('typeID'); 
             $table->unsignedBigInteger('albumID'); 
             $table->string('image_path'); 
             $table->timestamps();
 
-            $table->foreign('typeID')->references('id')->on('photoshoot_types');
             $table->foreign('albumID')->references('id')->on('albums');
 
         });

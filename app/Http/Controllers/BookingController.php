@@ -1,12 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Twilio\Rest\Client;
 use App\Models\Booking;
 use App\Models\Package;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\Notification;
+use App\Notifications\BookingStatusNotification;
+
 
 class BookingController extends Controller
 {
@@ -78,9 +82,9 @@ class BookingController extends Controller
         $smsContent = $request->input('smsContent');
 
         $booking = Booking::find($bookingId);
-        $clientPhoneNumber = $booking->client->phone; 
+        $clientPhoneNumber = $booking->client->phone;
 
-        
+
         $twilio = new Client(config('services.twilio.sid'), config('services.twilio.token'));
         $twilio->messages->create(
             $clientPhoneNumber,
@@ -93,4 +97,24 @@ class BookingController extends Controller
 
         return redirect()->back()->with('success', 'SMS sent successfully.');
     }
+
+
+
+    public function updateBookingStatus(Request $request)
+    {
+        $bookingId = $request->input('booking_id');
+        $newStatus = $request->input('status');
+    
+        $booking = Booking::find($bookingId);
+        $booking->status = $newStatus;
+        $booking->save();
+    
+        // $notification = new Notification();
+        // $notification->user_id = $booking->clientID;
+        // $notification->message = 'Your booking status has been updated to ' . $newStatus;
+        // $notification->save();
+    
+        return redirect()->back()->with('message', 'Booking status updated successfully.');
+    }
+    
 }

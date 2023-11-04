@@ -16,7 +16,7 @@
                     <div class="col-md-4"> 
                         <div class="gallery-item all">
                             <div class="gallery-item-inner">
-                                <img src="{{ asset('images/photoshoots/'.$image->image_path.'') }}" alt="{{ $image->image_name }}" width="100%" height="auto">
+                                <img src="{{ asset('storage/images/photoshoots/'.$image->image_path.'') }}" alt="{{ $image->image_name }}" width="100%" height="auto">
                             </div>
                         </div>
                     </div>

@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Pictratoshots</title>
-    <link rel="icon" type="text/css" href="{{ asset('images/Picture1.png') }}">
+    <link rel="icon" type="text/css" href="{{ asset('storage/images/Picture1.png') }}">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
