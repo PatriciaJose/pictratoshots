@@ -52,7 +52,6 @@
                                         <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#smsModal">
                                             <i class="fa-solid fa-comment-sms"></i>
                                         </button>
-                                        <!-- SMS Modal -->
                                         <div class="modal fade" id="smsModal" tabindex="-1" role="dialog" aria-labelledby="smsModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
@@ -79,7 +78,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- End of modal -->
                                         <button class="btn btn-success btn-sm"><i class="fa-solid fa-cloud-sun"></i></button>
                                         <form action="{{ route('update-booking-status') }}" method="post">
                                             @csrf
@@ -93,8 +91,6 @@
                                     <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#reasonModal">
                                         Add Reason
                                     </button>
-
-                                    <!-- Reason Modal -->
                                     <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
