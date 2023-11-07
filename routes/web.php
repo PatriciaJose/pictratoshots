@@ -72,6 +72,7 @@ Route::post('/store-booking', [BookingController::class, 'store'])->name('store.
 Route::get('/events', [BookingController::class, 'getEvents'])->name('events');
 
 Route::post('/send-sms', [BookingController::class, 'sendSms'])->name('send-sms');
+Route::post('/disapprove', [BookingController::class, 'addReason'])->name('add-reason');
 
 Route::get('/admin-bookings', [BookingController::class, 'bookingManagement'])->name('booking-management');
 Route::post('/update-booking-status', [BookingController::class, 'updateBookingStatus'])->name('update-booking-status');

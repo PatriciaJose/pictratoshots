@@ -104,17 +104,23 @@ class BookingController extends Controller
     {
         $bookingId = $request->input('booking_id');
         $newStatus = $request->input('status');
-    
+
         $booking = Booking::find($bookingId);
         $booking->status = $newStatus;
         $booking->save();
-    
-        // $notification = new Notification();
-        // $notification->user_id = $booking->clientID;
-        // $notification->message = 'Your booking status has been updated to ' . $newStatus;
-        // $notification->save();
-    
+
         return redirect()->back()->with('message', 'Booking status updated successfully.');
     }
-    
+    public function addReason(Request $request)
+    {
+        $bookingId = $request->input('booking_id');
+        $disapprovalReason = $request->input('disapprovalReason');
+
+        $booking = Booking::find($bookingId);
+
+        $booking->disapproval_reason=$disapprovalReason ;
+        $booking->save();
+
+        return redirect()->back()->with('message', 'Reason added successfully.');
+    }
 }

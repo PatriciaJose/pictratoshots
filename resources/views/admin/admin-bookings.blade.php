@@ -25,6 +25,7 @@
                                 <th>Session Time</th>
                                 <th>Location</th>
                                 <th>Status</th>
+                                <th>Reason of Disapproval</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -37,24 +38,92 @@
                                 <td>{{ $booking->session_time }}</td>
                                 <td>{{ $booking->location }}</td>
                                 <td>{{ $booking->status }}</td>
+                                <td>{{ $booking->disapproval_reason }}</td>
                                 <td>
-                                    <form method="post" action="{{ route('update-booking-status') }}">
+                                    @if ($booking->status == 'Pending')
+                                    <form action="{{ route('update-booking-status') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                        @if ($booking->status == 'Pending')
-                                        <button type="submit" name="status" value="Approved" class="btn btn-primary btn-sm">Accept</button>
-                                        <button type="submit" name="status" value="Disapproved" class="btn btn-danger btn-sm">Reject</button>
-                                    </form> 
+                                        <button type="submit" name="status" value="Approved" class="btn btn-primary btn-sm w-100">Accept</button>
+                                        <button type="submit" name="status" value="Disapproved" class="btn btn-danger btn-sm w-100 mt-1">Reject</button>
+                                    </form>
                                     @elseif ($booking->status == 'Approved')
                                     <div class="text-center">
                                         <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#smsModal">
                                             <i class="fa-solid fa-comment-sms"></i>
                                         </button>
+                                        <!-- SMS Modal -->
+                                        <div class="modal fade" id="smsModal" tabindex="-1" role="dialog" aria-labelledby="smsModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <form action="{{ route('send-sms') }}" method="post">
+                                                        @csrf
+                                                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="smsModalLabel">Send SMS</h5>
+                                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="smsContent">SMS Content</label>
+                                                                <textarea class="form-control" id="smsContent" name="smsContent" rows="4" required></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Send SMS</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End of modal -->
                                         <button class="btn btn-success btn-sm"><i class="fa-solid fa-cloud-sun"></i></button>
-                                        <button class="btn btn-info btn-sm mt-2" style="width:100%">Done</button>
+                                        <form action="{{ route('update-booking-status') }}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                            <button type="submit" name="status" value="finish" class="btn btn-sm w-100 btn-primary mt-1">Done</button>
+                                        </form>
                                     </div>
+                                    </form>
                                     @elseif ($booking->status == 'Disapproved')
-                                    <button class="btn btn-info btn-sm">Add Reason</button>
+                                    @if ($booking->disapproval_reason === null)
+                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#reasonModal">
+                                        Add Reason
+                                    </button>
+
+                                    <!-- Reason Modal -->
+                                    <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <form action="{{ route('add-reason') }}" method="post">
+                                                    @csrf
+                                                    <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="reasonModalLabel">Add Reason</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label for="disapprovalReason">Reason for Disapproval</label>
+                                                            <textarea class="form-control" id="disapprovalReason" name="disapprovalReason" rows="4" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Submit Reason</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                    @elseif ($booking->status == 'Finish')
+                                    <button class="btn btn-info btn-sm">Send Rate Form</button>
                                     @endif
                                 </td>
                             </tr>
