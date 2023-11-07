@@ -78,7 +78,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button class="btn btn-success btn-sm"><i class="fa-solid fa-cloud-sun"></i></button>
+                                        <button class="btn btn-success btn-sm" onclick="getWeather('{{ $booking->session_date }}', '{{ $booking->session_time }}', '{{ $booking->location }}')">
+                                            <i class="fa-solid fa-cloud-sun"></i>
+                                        </button>
+
                                         <form action="{{ route('update-booking-status') }}" method="post">
                                             @csrf
                                             <input type="hidden" name="booking_id" value="{{ $booking->id }}">
@@ -146,6 +149,65 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Modal for displaying weather information -->
+    <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog" aria-labelledby="weatherModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="weatherModalLabel">Weather Information</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Weather information will be displayed here -->
+                    <div id="weatherInfo">
+                        <p><strong>Temperature:</strong> <span id="temperature"></span>°C</p>
+                        <p><strong>Weather:</strong> <span id="weatherDescription"></span></p>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="userNote">Add your note:</label>
+                        <textarea class="form-control" id="userNote" rows="4" placeholder="Write a note ..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to fetch and display weather information
+        function getWeather(sessionDate, sessionTime, location) {
+            $.ajax({
+                url: 'https://api.openweathermap.org/data/2.5/weather',
+                method: 'GET',
+                data: {
+                    q: location,
+                    appid: '5e11be8c4280d91cb6eff44b07c62b93',
+                    units: 'metric',
+                },
+                success: function(data) {
+                    const temperature = data.main.temp;
+                    const weatherDescription = data.weather[0].description;
+
+                    // Display weather information in the modal
+                    $('#weatherModal .modal-title').text(`Weather forecast on Session`);
+                    $('#temperature').text(temperature.toFixed(2));
+                    $('#weatherDescription').text(weatherDescription);
+
+                    $('#weatherModal').modal('show');
+                },
+                error: function() {
+                    alert('Failed to fetch weather data.');
+                },
+            });
+        }
+    </script>
 
 
     <script>
