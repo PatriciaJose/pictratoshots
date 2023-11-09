@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WeatherController;
 use App\Models\PhotoshootType;
 
 Route::get('/', function () {
@@ -54,6 +55,7 @@ Route::get('/packages', [PackageController::class, 'index'])->name('packages');
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
 
 Route::get('/admin-feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+Route::post('/submit-feedback', [FeedbackController::class, 'store'])->name('feedback.submit');
 
 
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery');
@@ -87,9 +89,14 @@ Route::post('/event/create', [EventController::class, 'eventStore'])->name('even
 Route::put('/event/update', [EventController::class, 'updateEvent'])->name('event.update');
 Route::delete('/event/{id}', [EventController::class, 'deleteEvent'])->name('event.delete');
 
+Route::post('/insert-weather', [WeatherController::class,'insertWeather'])->name('insert.weather');
+Route::post('/send-rating-form', [FeedbackController::class, 'sendRatingForm'])->name('send-rating-form');
+Route::get('/fetch-notification-count', [NotificationController::class,'fetchNotificationCount'])->name('fetch-notification-count');
+Route::get('/fetch-notifications', [NotificationController::class,'fetchNotifications'])->name('fetch-notifications');
+Route::get('/fetch-booking-status', [NotificationController::class,'fetchBookingStatus'])->name('fetch-booking-status');
+Route::get('/fetch-weather-details', [NotificationController::class,'fetchWeatherDetails'])->name('fetch-weather-details');
+Route::get('/fetch-booking-details',  [NotificationController::class, 'fetchBookingDetails'])->name('fetch-booking-details');
 
-Route::get('/notifications/markAllAsRead', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
-Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

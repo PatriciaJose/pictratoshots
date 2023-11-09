@@ -78,9 +78,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button class="btn btn-success btn-sm" onclick="getWeather('{{ $booking->session_date }}', '{{ $booking->session_time }}', '{{ $booking->location }}')">
+                                        <button class="btn btn-success btn-sm" onclick="getWeather('{{ $booking->session_date }}', '{{ $booking->session_time }}', '{{ $booking->location }}', '{{ $booking->id }}')">
                                             <i class="fa-solid fa-cloud-sun"></i>
                                         </button>
+
 
                                         <form action="{{ route('update-booking-status') }}" method="post">
                                             @csrf
@@ -122,7 +123,11 @@
                                     </div>
                                     @endif
                                     @elseif ($booking->status == 'Finish')
-                                    <button class="btn btn-info btn-sm">Send Rate Form</button>
+                                    <form action="{{ route('send-rating-form') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                        <button type="submit" class="btn btn-info btn-sm">Send Rating Form</button>
+                                    </form>
                                     @endif
                                 </td>
                             </tr>
@@ -151,7 +156,6 @@
     </div>
 
 
-    <!-- Modal for displaying weather information -->
     <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog" aria-labelledby="weatherModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -162,7 +166,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Weather information will be displayed here -->
                     <div id="weatherInfo">
                         <p><strong>Temperature:</strong> <span id="temperature"></span>°C</p>
                         <p><strong>Weather:</strong> <span id="weatherDescription"></span></p>
@@ -175,16 +178,22 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="notifyUserButton" class="btn btn-primary">Notify User</button>
                 </div>
             </div>
         </div>
     </div>
 
+
+
     <script>
-        // Function to fetch and display weather information
-        function getWeather(sessionDate, sessionTime, location) {
+        function getWeather(sessionDate, sessionTime, location, bookingId) {
+            const dateTime = sessionDate + ' ' + sessionTime;
+
+            const timestamp = new Date(dateTime).getTime() / 1000;
+
             $.ajax({
-                url: 'https://api.openweathermap.org/data/2.5/weather',
+                url: 'https://api.openweathermap.org/data/2.5/forecast',
                 method: 'GET',
                 data: {
                     q: location,
@@ -192,24 +201,48 @@
                     units: 'metric',
                 },
                 success: function(data) {
-                    const temperature = data.main.temp;
-                    const weatherDescription = data.weather[0].description;
+                    const forecasts = data.list;
+                    let closestForecast = forecasts[0];
+                    for (const forecast of forecasts) {
+                        if (Math.abs(forecast.dt - timestamp) < Math.abs(closestForecast.dt - timestamp)) {
+                            closestForecast = forecast;
+                        }
+                    }
 
-                    // Display weather information in the modal
-                    $('#weatherModal .modal-title').text(`Weather forecast on Session`);
+                    const temperature = closestForecast.main.temp;
+                    const weatherDescription = closestForecast.weather[0].description;
+
+                    $('#weatherModal .modal-title').text(`Weather forecast on ${sessionDate} at ${sessionTime}`);
                     $('#temperature').text(temperature.toFixed(2));
                     $('#weatherDescription').text(weatherDescription);
 
                     $('#weatherModal').modal('show');
-                },
-                error: function() {
-                    alert('Failed to fetch weather data.');
-                },
+
+                    $('#notifyUserButton').on('click', function() {
+                        $.ajax({
+                            url: '/insert-weather',
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                booking_id: bookingId,
+                                temperature: temperature,
+                                weather_description: weatherDescription,
+                                notes: $('#userNote').val(),
+                            },
+                            success: function(response) {
+                                alert('User successfully notified');
+                            },
+                            error: function() {
+                                alert('Failed to insert weather data into the database.');
+                            },
+                        });
+                    });
+                }
             });
         }
     </script>
-
-
     <script>
         $(document).ready(function() {
             $('#table_id').DataTable();

@@ -104,13 +104,36 @@ class BookingController extends Controller
     {
         $bookingId = $request->input('booking_id');
         $newStatus = $request->input('status');
-
+    
         $booking = Booking::find($bookingId);
+    
+        if (!$booking) {
+            return redirect()->back()->with('error', 'Booking not found.');
+        }
+    
+        
+        $clientId = $booking->clientID;
+    
         $booking->status = $newStatus;
         $booking->save();
-
+    
+        if ($newStatus == 'Approved') {
+            $approve = new Notification();
+            $approve->bookingID = $bookingId;
+            $approve->clientID = $clientId; 
+            $approve->notification_type = 'booking-approved';
+            $approve->save();
+        } else if ($newStatus == 'Disapproved') {
+            $approve = new Notification();
+            $approve->bookingID = $bookingId;
+            $approve->clientID = $clientId; 
+            $approve->notification_type = 'booking-disapproved';
+            $approve->save();
+        }
+    
         return redirect()->back()->with('message', 'Booking status updated successfully.');
     }
+    
     public function addReason(Request $request)
     {
         $bookingId = $request->input('booking_id');
@@ -118,7 +141,7 @@ class BookingController extends Controller
 
         $booking = Booking::find($bookingId);
 
-        $booking->disapproval_reason=$disapprovalReason ;
+        $booking->disapproval_reason = $disapprovalReason;
         $booking->save();
 
         return redirect()->back()->with('message', 'Reason added successfully.');

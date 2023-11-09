@@ -1,4 +1,110 @@
 <nav x-data="{ open: false }" class="p-2" id="headerNav">
+    <style>
+        .notification-bell {
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 10px;
+        }
+
+        .notification-panel {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            z-index: 9999;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-panel-header {
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-color: #fff;
+        }
+
+        .notification-items {
+            padding: 20px;
+        }
+
+        .notification-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item-header {
+            margin-bottom: 10px;
+        }
+
+        .notification-item-header h6 {
+            font-weight: 600;
+        }
+
+        .notification-date {
+            color: #999;
+        }
+
+        .rate {
+            border-bottom-right-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: start
+        }
+
+        .rating>input {
+            display: none
+        }
+
+        .rating>label {
+            position: relative;
+            width: 1em;
+            font-size: 30px;
+            font-weight: 300;
+            color: #FFD600;
+            cursor: pointer
+        }
+
+        .rating>label::before {
+            content: "\2605";
+            position: absolute;
+            opacity: 0
+        }
+
+        .rating>label:hover:before,
+        .rating>label:hover~label:before {
+            opacity: 1 !important
+        }
+
+        .rating>input:checked~label:before {
+            opacity: 1
+        }
+
+        .rating:hover>input:checked~label:before {
+            opacity: 0.4
+        }
+    </style>
     <div class="max-w-10xl">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -20,8 +126,11 @@
                 </a>
             </div>
             <div class="hidden space-x-8 sm:flex sm:items-center pe-5">
-                <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                    <i class="fa-solid fa-bell"></i>
+                <x-nav-link>
+                    <a class="nav-link notification-bell" href="#">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge"></span>
+                    </a>
                 </x-nav-link>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -89,3 +198,187 @@
         </div>
     </div>
 </nav>
+<div id="notificationPanel" class="notification-panel d-none">
+    <div class="notification-panel-header">
+        <h5 class="mb-0">Notification</h5>
+    </div>
+    <div class="notification-items">
+    </div>
+</div>
+
+<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ratingModalLabel">Rate Our Services</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('feedback.submit') }}" method="post">
+                    @csrf
+                    <label for="feedbackMessage">Feedback:</label>
+                    <textarea name="message" id="feedbackMessage" class="form-control" placeholder="Write your experience..."></textarea>
+                    <div class="rating">
+                        <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
+                        <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
+                        <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                        <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                        <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function fetchNotifications() {
+        $.ajax({
+            url: "{{ route('fetch-notifications') }}",
+            method: 'GET',
+            success: function(data) {
+                data.notifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                $('#notificationPanel .notification-items').html('');
+
+                if (data.notifications.length > 0) {
+                    data.notifications.forEach(function(notification) {
+                        var notificationContent = "";
+                        var notificationTitle = "";
+                        if (notification.notification_type === 'booking-approved') {
+                            notificationTitle = "<i class=\"fa-solid fa-calendar-check\"></i> Booking Update";
+                            notificationContent = "You have successfully reserved a photoshoot session";
+                            addNotificationItem(notificationTitle, notificationContent, notification.created_at);
+                        } else if (notification.notification_type === 'booking-disapproved') {
+                            fetchBookingDetails(notification);
+                        } else if (notification.notification_type === 'weather') {
+                            fetchWeatherDetails(notification);
+                        } else if (notification.notification_type === 'rating') {
+                            notificationTitle = "<i class=\"fa-solid fa-circle-check\"></i> Session Finished";
+                            notificationContent = "Thank you for a wonderful collaboration. Kindly rate our services";
+                            var ratingButton = `<button class="btn btn-secondary w-100 mt-3" onclick="showRatingModal()">Write Review</button>`;
+                            notificationContent += ratingButton;
+                            addNotificationItem(notificationTitle, notificationContent, notification.created_at);
+                        } else {
+                            addNotificationItem(notification.notification_type, notificationContent, notification.created_at);
+                        }
+                    });
+                } else {
+                    $('#notificationPanel .notification-items').html('<p>No notifications found.</p>');
+                }
+            },
+            error: function(error) {
+                console.log('Error fetching notifications');
+            }
+        });
+    }
+
+    function fetchBookingDetails(notification) {
+        $.ajax({
+            url: "{{ route('fetch-booking-details') }}",
+            method: 'GET',
+            data: {
+                bookingID: notification.bookingID
+            },
+            success: function(bookingData) {
+                var notificationContent = "Booking Rejected: <br> Reason: " + bookingData.disapproval_reason;
+                var notificationTitle = "<i class=\"fa-regular fa-calendar-xmark\"></i> Booking Update";
+                addNotificationItem(notificationTitle, notificationContent, notification.created_at);
+            },
+            error: function(error) {
+                console.log('Error fetching booking details');
+            }
+        });
+    }
+
+    function fetchWeatherDetails(notification) {
+        $.ajax({
+            url: "{{ route('fetch-weather-details') }}",
+            method: 'GET',
+            data: {
+                weatherID: notification.weatherID
+            },
+            success: function(weatherData) {
+                var notificationTitle = "<i class=\"fa-solid fa-cloud-sun\"></i> Weather Update";
+                var notificationContent = "Temperature: " + weatherData.temperature + "<br>Description: " + weatherData.weather_description + "<br> Notes: " + weatherData.notes;
+                addNotificationItem(notificationTitle, notificationContent, notification.created_at);
+            },
+            error: function(error) {
+                console.log('Error fetching weather details');
+            }
+        });
+    }
+
+
+    function addNotificationItem(type, content, created_at) {
+        const createdAtDate = new Date(created_at);
+
+        const formattedDate = createdAtDate.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+
+        var notificationItem = `
+        <div class="notification-item">
+            <div class="notification-item-header">
+                <h6 class="mb-0 text-capitalize">${type}</h6>
+            </div>
+            <p class="notification-content text-sm">${content}</p>
+            <span class="notification-date text-muted"style="font-size:11px">${formattedDate}</span>
+        </div>
+    `;
+        $('#notificationPanel .notification-items').append(notificationItem);
+    }
+
+    function showRatingModal() {
+        $('#ratingModal').modal('show');
+    }
+
+
+
+
+    function updateNotificationBadge() {
+        $.ajax({
+            url: "{{ route('fetch-notification-count') }}",
+            method: 'GET',
+            success: function(data) {
+                if (data.count > 0) {
+                    $('.badge').text(data.count).show();
+                } else {
+                    $('.badge').hide();
+                }
+            },
+            error: function(error) {
+                console.log('Error fetching notification count');
+            }
+        });
+    }
+
+    setInterval(updateNotificationBadge, 60000);
+
+    $(document).ready(function() {
+        updateNotificationBadge();
+
+        $('.notification-bell').click(function(e) {
+            e.preventDefault();
+            $('#notificationPanel').toggleClass('d-none');
+            fetchNotifications();
+        });
+
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('#notificationPanel, .notification-bell').length) {
+                $('#notificationPanel').addClass('d-none');
+            }
+        });
+
+        $('#notificationPanel').on('click', 'a, button', function() {
+            $('#notificationPanel').addClass('d-none');
+        });
+    });
+</script>
