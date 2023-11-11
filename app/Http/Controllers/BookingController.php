@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdminNotification;
 use Twilio\Rest\Client;
 use App\Models\Booking;
 use App\Models\Package;
@@ -25,9 +26,7 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
-
         $clientId = Auth::id();
-
 
         $data = $request->validate([
             'packageID' => 'required|exists:packages,id',
@@ -36,14 +35,20 @@ class BookingController extends Controller
             'session_time' => 'required|date_format:H:i',
         ]);
 
-
-        Booking::create([
+        $booking = Booking::create([
             'packageID' => $data['packageID'],
             'clientID' => $clientId,
             'session_date' => $data['session_date'],
             'location' => $data['location'],
             'session_time' => $data['session_time'],
         ]);
+
+        $bookingId = $booking->id;
+
+        $approve = new AdminNotification();
+        $approve->bookingID = $bookingId;
+        $approve->notification_type = 'new-bookings';
+        $approve->save();
 
         return redirect()->route('packages')->with('message', 'Booking successful!');
     }
@@ -104,36 +109,33 @@ class BookingController extends Controller
     {
         $bookingId = $request->input('booking_id');
         $newStatus = $request->input('status');
-    
+
         $booking = Booking::find($bookingId);
-    
-        if (!$booking) {
-            return redirect()->back()->with('error', 'Booking not found.');
-        }
-    
-        
+
         $clientId = $booking->clientID;
-    
+
         $booking->status = $newStatus;
         $booking->save();
-    
+
         if ($newStatus == 'Approved') {
             $approve = new Notification();
             $approve->bookingID = $bookingId;
-            $approve->clientID = $clientId; 
+            $approve->clientID = $clientId;
             $approve->notification_type = 'booking-approved';
             $approve->save();
+
+            return redirect()->back()->with('message', 'Booking status updated successfully.');
         } else if ($newStatus == 'Disapproved') {
             $approve = new Notification();
             $approve->bookingID = $bookingId;
-            $approve->clientID = $clientId; 
+            $approve->clientID = $clientId;
             $approve->notification_type = 'booking-disapproved';
             $approve->save();
+        } else if ($newStatus == 'finish') {
+            return redirect()->back()->with('message', 'Booking status updated successfully.');
         }
-    
-        return redirect()->back()->with('message', 'Booking status updated successfully.');
     }
-    
+
     public function addReason(Request $request)
     {
         $bookingId = $request->input('booking_id');

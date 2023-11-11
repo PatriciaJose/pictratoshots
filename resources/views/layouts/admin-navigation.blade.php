@@ -16,12 +16,13 @@
                     </div>
 
                     <div class="navigation-bar-right col-6 d-flex align-items-center justify-content-end">
-                        <button type="button" class="notification-btn text-grey-blue">
+                        <a class="nav-link notification-bell" href="#">
                             <i class="fa-regular fa-bell"></i>
-                        </button>
+                            <span class="badge"></span>
+                        </a>
                         <a href="{{ route('admin.edit') }}"><button class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md  bg-transparent hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>Hi, {{ Auth::user()->name }}!</div>
-                        </button></a>
+                                <div>Hi, {{ Auth::user()->name }}!</div>
+                            </button></a>
                     </div>
                 </div>
             </div>
@@ -163,3 +164,215 @@
             </div>
         </div>
     </div>
+
+    <div id="notificationPanel" class="notification-panel d-none">
+        <div class="notification-panel-header">
+            <h5 class="mb-0">Notification</h5>
+        </div>
+        <div class="notification-items">
+        </div>
+    </div>
+    <script>
+        function fetchNotifications() {
+            $.ajax({
+                url: "{{ route('fetch-notifications-admin') }}",
+                method: 'GET',
+                success: function(data) {
+                    data.notifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                    $('#notificationPanel .notification-items').html('');
+                    fetchBookingsForCurrentDate();
+                    if (data.notifications.length > 0) {
+                        data.notifications.forEach(function(notification) {
+                            var notificationContent = "";
+                            var notificationTitle = "";
+
+                            if (notification.notification_type === 'new-bookings') {
+                                notificationTitle = "<i class=\"fa-solid fa-calendar-check\"></i> New Booking";
+                                notificationContent = `<a href="{{ route('booking-management') }}"><button class="btn btn-secondary w-100 mt-3">View Bookings</button></a>`;
+                                addNotificationItem(notificationTitle, notificationContent, notification.created_at);
+                            } else if (notification.notification_type === 'session-today') {
+                                var notificationTitle = "<i class=\"fa-solid fa-business-time\"></i> Session Today";
+                                var notificationContent = `<a href="{{ route('booking-management') }}"><button class="btn btn-secondary w-100 mt-3">View Calendar</button></a>`;
+                                addNotificationItem(notificationTitle, notificationContent, new Date());
+                            } else if (notification.notification_type === 'new-feedback') {
+                                notificationTitle = "<i class=\"fa-solid fa-star\"></i> New Feedback";
+                                notificationContent = `<a href="{{ route('feedback.index') }}"><button class="btn btn-secondary w-100 mt-3">View Feedbacks</button><a/>`;
+                                addNotificationItem(notificationTitle, notificationContent, notification.created_at);
+                            } else {
+                                addNotificationItem(notification.notification_type, notificationContent, notification.created_at);
+                            }
+                        });
+                    } else {
+                        $('#notificationPanel .notification-items').html('<p>No notifications found.</p>');
+                    }
+                },
+                error: function(error) {
+                    console.log('Error fetching notifications');
+                }
+            });
+        }
+
+        function addNotificationItem(type, content, created_at) {
+            const createdAtDate = new Date(created_at);
+
+            const formattedDate = createdAtDate.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            var notificationItem = `
+        <div class="notification-item">
+            <div class="notification-item-header">
+                <h6 class="mb-0 text-capitalize">${type}</h6>
+            </div>
+            <p class="notification-content text-sm">${content}</p>
+            <span class="notification-date text-muted"style="font-size:11px">${formattedDate}</span>
+        </div>
+    `;
+            $('#notificationPanel .notification-items').append(notificationItem);
+        }
+
+        function fetchBookingsForCurrentDate() {
+            $.ajax({
+                url: "{{ route('fetch-bookings-for-current-date') }}",
+                method: 'GET',
+                success: function(bookings) {
+                    if (bookings.length > 0) {
+
+                    }
+                },
+                error: function(error) {
+                    console.log('Error fetching bookings for the current date');
+                }
+            });
+        }
+
+        function updateNotificationBadge() {
+            $.ajax({
+                url: "{{ route('fetch-notification-count-admin') }}",
+                method: 'GET',
+                success: function(data) {
+                    if (data.count > 0) {
+                        $('.badge').text(data.count).show();
+                    } else {
+                        $('.badge').hide();
+                    }
+                },
+                error: function(error) {
+                    console.log('Error fetching notification count');
+                }
+            });
+        }
+
+        setInterval(updateNotificationBadge, 60000);
+
+        $(document).ready(function() {
+            updateNotificationBadge();
+
+            $('.notification-bell').click(function(e) {
+                e.preventDefault();
+                $('#notificationPanel').toggleClass('d-none');
+                fetchNotifications();
+            });
+
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#notificationPanel, .notification-bell').length) {
+                    $('#notificationPanel').addClass('d-none');
+                }
+            });
+
+            $('#notificationPanel').on('click', 'a, button', function() {
+                $('#notificationPanel').addClass('d-none');
+            });
+        });
+
+        $(document).ready(function() {
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            function marksAsViewed() {
+                $.ajax({
+                    url: "{{ route('markAsViewedAdmin') }}",
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken
+                    },
+                    success: function(response) {
+                        console.log(response);
+                    }
+                });
+            }
+
+            $('.notification-bell').click(function(e) {
+                e.preventDefault();
+                $('.badge').remove();
+                marksAsViewed();
+            });
+        });
+    </script>
+    <style>
+        .notification-bell {
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 10px;
+        }
+
+        .notification-panel {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            z-index: 9999;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-panel-header {
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-color: #fff;
+        }
+
+        .notification-items {
+            padding: 20px;
+        }
+
+        .notification-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item-header {
+            margin-bottom: 10px;
+        }
+
+        .notification-item-header h6 {
+            font-weight: 600;
+        }
+
+        .notification-date {
+            color: #999;
+        }
+    </style>

@@ -6,6 +6,8 @@ use App\Models\Booking;
 use App\Models\Notification;
 use App\Models\Weather;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class NotificationController extends Controller
 {
@@ -55,5 +57,15 @@ class NotificationController extends Controller
         } else {
             return response()->json(['error' => 'Booking details not found'], 404);
         }
+    }
+    public function marksAsViewed(Request $request)
+    {
+        $userId = Auth::id();
+        if ($userId) {
+            Notification::where('clientID', $userId)->update(['status' => 'read']);
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
     }
 }

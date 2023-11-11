@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NotificationAdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\GalleryController;
@@ -23,13 +24,13 @@ Route::get('/', function () {
         }]);
     }])->get();
 
-    $feedbacks = Feedback::all(); 
+    $feedbacks = Feedback::all();
     $feedbackData = [];
     foreach ($feedbacks as $feedback) {
         $booking = Booking::find($feedback->bookingID);
         if ($booking) {
             $user = User::find($booking->clientID);
-            $photoshootType = PhotoshootType::find($booking->package->typeID); 
+            $photoshootType = PhotoshootType::find($booking->package->typeID);
             if ($user && $photoshootType) {
                 $feedbackData[] = [
                     'user' => $user,
@@ -89,14 +90,22 @@ Route::post('/event/create', [EventController::class, 'eventStore'])->name('even
 Route::put('/event/update', [EventController::class, 'updateEvent'])->name('event.update');
 Route::delete('/event/{id}', [EventController::class, 'deleteEvent'])->name('event.delete');
 
-Route::post('/insert-weather', [WeatherController::class,'insertWeather'])->name('insert.weather');
+Route::post('/insert-weather', [WeatherController::class, 'insertWeather'])->name('insert.weather');
 Route::post('/send-rating-form', [FeedbackController::class, 'sendRatingForm'])->name('send-rating-form');
-Route::get('/fetch-notification-count', [NotificationController::class,'fetchNotificationCount'])->name('fetch-notification-count');
-Route::get('/fetch-notifications', [NotificationController::class,'fetchNotifications'])->name('fetch-notifications');
-Route::get('/fetch-booking-status', [NotificationController::class,'fetchBookingStatus'])->name('fetch-booking-status');
-Route::get('/fetch-weather-details', [NotificationController::class,'fetchWeatherDetails'])->name('fetch-weather-details');
+Route::get('/fetch-notification-count', [NotificationController::class, 'fetchNotificationCount'])->name('fetch-notification-count');
+Route::get('/fetch-notifications', [NotificationController::class, 'fetchNotifications'])->name('fetch-notifications');
+Route::get('/fetch-booking-status', [NotificationController::class, 'fetchBookingStatus'])->name('fetch-booking-status');
+Route::get('/fetch-weather-details', [NotificationController::class, 'fetchWeatherDetails'])->name('fetch-weather-details');
 Route::get('/fetch-booking-details',  [NotificationController::class, 'fetchBookingDetails'])->name('fetch-booking-details');
+Route::post('/markAsViewed',  [NotificationController::class, 'marksAsViewed'])->name('markAsViewed');
+Route::get('/fetch-rating-form/{ratingFormID}', [FeedbackController::class, 'fetchRatingForm'])->name('fetch-rating-form');
+Route::get('/check-booking-feedback/{bookingID}', [FeedbackController::class, 'checkBookingFeedback'])->name('check-booking-feedback');
 
+
+Route::get('/fetch-notification-count-admin', [NotificationAdminController::class, 'fetchNotificationCount'])->name('fetch-notification-count-admin');
+Route::get('/fetch-notifications-admin', [NotificationAdminController::class, 'fetchNotifications'])->name('fetch-notifications-admin');
+Route::post('/markAsViewedAdmin',  [NotificationAdminController::class, 'marksAsViewed'])->name('markAsViewedAdmin');
+Route::get('/fetch-notifications-admin-date', [NotificationAdminController::class, 'fetchNotificationsAdmin'])->name('fetch-bookings-for-current-date');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

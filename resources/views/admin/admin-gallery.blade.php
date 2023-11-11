@@ -158,10 +158,9 @@
 
 
     <script>
-        let dataTable; // Define the dataTable variable in this scope
-
+        let dataTable
         $(document).ready(function() {
-            dataTable = $('#table_id').DataTable(); // Initialize dataTable
+            dataTable = $('#table_id').DataTable();
             $('#filterType').on('change', function() {
                 const selectedType = $(this).val();
                 console.log('Selected Type:', selectedType);

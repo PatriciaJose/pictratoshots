@@ -1,11 +1,9 @@
 <x-admin-layout>
     <div class="dashboard-main">
         <div class="container">
-            <div class="row py-3">
-                <div class="col-12 d-flex justify-content-between align-items-center">
-                    <div class="dashboard-title-text">
-                        <h2>Booking Management</h2>
-                    </div>
+            <div class="card my-3">
+                <div class="card-body">
+                    <h2>Booking Management</h2>
                 </div>
             </div>
             <div class="card">
@@ -41,12 +39,77 @@
                                 <td>{{ $booking->disapproval_reason }}</td>
                                 <td>
                                     @if ($booking->status == 'Pending')
-                                    <form action="{{ route('update-booking-status') }}" method="post">
+                                    <form id="bookingForm" action="{{ route('update-booking-status') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                                         <button type="submit" name="status" value="Approved" class="btn btn-primary btn-sm w-100">Accept</button>
-                                        <button type="submit" name="status" value="Disapproved" class="btn btn-danger btn-sm w-100 mt-1">Reject</button>
+                                        <button type="button" id="rejectButton" class="btn btn-danger btn-sm w-100 mt-1">Reject</button>
                                     </form>
+
+                                    <script>
+                                        document.getElementById('rejectButton').addEventListener('click', function() {
+                                            rejectBooking();
+                                        });
+
+                                        function rejectBooking() {
+                                            var form = document.getElementById('bookingForm');
+                                            var formData = new FormData(form);
+
+                                            formData.append('status', 'Disapproved');
+
+                                            var xhr = new XMLHttpRequest();
+                                            xhr.open('POST', form.action, true);
+
+                                            xhr.onload = function() {
+                                                if (xhr.status >= 200 && xhr.status < 300) {
+
+                                                    console.log('Booking rejected successfully.');
+                                                } else {
+
+                                                    console.log('Error rejecting booking.');
+                                                }
+                                            };
+
+                                            xhr.onerror = function() {
+
+                                                console.log('Error connecting to the server.');
+                                            };
+
+                                            xhr.send(formData);
+                                        }
+                                    </script>
+                                    <script>
+                                        document.getElementById('rejectButton').addEventListener('click', function() {
+                                            $('#reasonModal').modal('show');
+                                        });
+                                    </script>
+                                    <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <form action="{{ route('add-reason') }}" method="post">
+                                                    @csrf
+                                                    <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="reasonModalLabel">Add Reason</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label for="disapprovalReason">Reason for Disapproval</label>
+                                                            <textarea class="form-control" id="disapprovalReason" name="disapprovalReason" rows="4" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Submit Reason</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     @elseif ($booking->status == 'Approved')
                                     <div class="text-center">
                                         <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#smsModal">
@@ -81,8 +144,6 @@
                                         <button class="btn btn-success btn-sm" onclick="getWeather('{{ $booking->session_date }}', '{{ $booking->session_time }}', '{{ $booking->location }}', '{{ $booking->id }}')">
                                             <i class="fa-solid fa-cloud-sun"></i>
                                         </button>
-
-
                                         <form action="{{ route('update-booking-status') }}" method="post">
                                             @csrf
                                             <input type="hidden" name="booking_id" value="{{ $booking->id }}">
@@ -90,44 +151,17 @@
                                         </form>
                                     </div>
                                     </form>
-                                    @elseif ($booking->status == 'Disapproved')
-                                    @if ($booking->disapproval_reason === null)
-                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#reasonModal">
-                                        Add Reason
-                                    </button>
-                                    <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <form action="{{ route('add-reason') }}" method="post">
-                                                    @csrf
-                                                    <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="reasonModalLabel">Add Reason</h5>
-                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="disapprovalReason">Reason for Disapproval</label>
-                                                            <textarea class="form-control" id="disapprovalReason" name="disapprovalReason" rows="4" required></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Submit Reason</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endif
                                     @elseif ($booking->status == 'Finish')
+                                    @php
+                                    $ratingFormExists = App\Models\RatingForm::where('bookingID', $booking->id)->exists();
+                                    @endphp
+                                    @if (!$ratingFormExists)
                                     <form action="{{ route('send-rating-form') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                                         <button type="submit" class="btn btn-info btn-sm">Send Rating Form</button>
                                     </form>
+                                    @endif
                                     @endif
                                 </td>
                             </tr>
@@ -138,6 +172,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

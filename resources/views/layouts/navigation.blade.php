@@ -216,6 +216,7 @@
             <div class="modal-body">
                 <form action="{{ route('feedback.submit') }}" method="post">
                     @csrf
+                    <input type="hidden" name="ratingFormID">
                     <label for="feedbackMessage">Feedback:</label>
                     <textarea name="message" id="feedbackMessage" class="form-control" placeholder="Write your experience..."></textarea>
                     <div class="rating">
@@ -247,6 +248,7 @@
                     data.notifications.forEach(function(notification) {
                         var notificationContent = "";
                         var notificationTitle = "";
+
                         if (notification.notification_type === 'booking-approved') {
                             notificationTitle = "<i class=\"fa-solid fa-calendar-check\"></i> Booking Update";
                             notificationContent = "You have successfully reserved a photoshoot session";
@@ -256,11 +258,18 @@
                         } else if (notification.notification_type === 'weather') {
                             fetchWeatherDetails(notification);
                         } else if (notification.notification_type === 'rating') {
-                            notificationTitle = "<i class=\"fa-solid fa-circle-check\"></i> Session Finished";
-                            notificationContent = "Thank you for a wonderful collaboration. Kindly rate our services";
-                            var ratingButton = `<button class="btn btn-secondary w-100 mt-3" onclick="showRatingModal()">Write Review</button>`;
-                            notificationContent += ratingButton;
-                            addNotificationItem(notificationTitle, notificationContent, notification.created_at);
+                            var bookingID = getBookingIDFromRatingFormID(notification.ratingFormID);
+                            if (!isBookingIDInFeedback(bookingID, data.feedback)) {
+                                notificationTitle = "<i class=\"fa-solid fa-star\"></i> Rate Us";
+                                notificationContent = "Thank you for a wonderful collaboration. Kindly rate our services"
+                                var ratingButton = `<button class="btn btn-secondary w-100 mt-3" onclick="showRatingModal(${notification.ratingFormID})">Write Review</button>`;
+                                notificationContent += ratingButton;
+                                addNotificationItem(notificationTitle, notificationContent, notification.created_at);
+                            } else {
+                                notificationTitle = "<i class=\"fa-solid fa-circle-check\"></i> Session Finished";
+                                notificationContent = "We hope you enjoy our service, 'Till next time!"
+                                addNotificationItem(notificationTitle, notificationContent, notification.created_at);
+                            }
                         } else {
                             addNotificationItem(notification.notification_type, notificationContent, notification.created_at);
                         }
@@ -274,6 +283,40 @@
             }
         });
     }
+
+    function getBookingIDFromRatingFormID(ratingFormID) {
+        var bookingID;
+        $.ajax({
+            url: "{{ url('fetch-rating-form') }}/" + ratingFormID,
+            method: 'GET',
+            async: false,
+            success: function(data) {
+                bookingID = data.bookingID;
+            },
+            error: function(error) {
+                console.log('Error fetching booking ID');
+            }
+        });
+        return bookingID;
+    }
+
+    function isBookingIDInFeedback(bookingID, feedbackData) {
+        var exists;
+        $.ajax({
+            url: "{{ url('check-booking-feedback') }}/" + bookingID,
+            method: 'GET',
+            async: false,
+            success: function(data) {
+                exists = data.exists;
+            },
+            error: function(error) {
+                console.log('Error checking booking feedback');
+            }
+        });
+        return exists;
+    }
+
+
 
     function fetchBookingDetails(notification) {
         $.ajax({
@@ -336,12 +379,10 @@
         $('#notificationPanel .notification-items').append(notificationItem);
     }
 
-    function showRatingModal() {
+    function showRatingModal(ratingFormID) {
+        $('#ratingModal input[name="ratingFormID"]').val(ratingFormID);
         $('#ratingModal').modal('show');
     }
-
-
-
 
     function updateNotificationBadge() {
         $.ajax({
@@ -379,6 +420,29 @@
 
         $('#notificationPanel').on('click', 'a, button', function() {
             $('#notificationPanel').addClass('d-none');
+        });
+    });
+
+    $(document).ready(function() {
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        function marksAsViewed() {
+            $.ajax({
+                url: "{{ route('markAsViewed') }}",
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken
+                },
+                success: function(response) {
+                    console.log(response);
+                }
+            });
+        }
+
+        $('.notification-bell').click(function(e) {
+            e.preventDefault();
+            $('.badge').remove();
+            marksAsViewed();
         });
     });
 </script>

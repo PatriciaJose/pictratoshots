@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdminNotification;
 use App\Models\Booking;
 use App\Models\Feedback;
 use App\Models\Notification;
@@ -67,21 +68,43 @@ class FeedbackController extends Controller
     }
     public function store(Request $request)
     {
-   
         $request->validate([
             'message' => 'required',
             'rating' => 'required|numeric|between:1,5',
         ]);
 
-       
         $feedback = new Feedback;
         $feedback->message = $request->input('message');
         $feedback->rating = $request->input('rating');
-        $feedback->bookingID = 1; 
+
+
+        $ratingFormID = $request->input('ratingFormID');
+        $ratingForm = RatingForm::find($ratingFormID);
+        $bookingID = $ratingForm->bookingID;
+        $feedback->bookingID = $bookingID;
 
         $feedback->save();
 
         
+        $feedbackID = $feedback->id;
+
+        $approve = new AdminNotification();
+        $approve->feedbackID = $feedbackID;
+        $approve->notification_type = 'new-feedback';
+        $approve->save();
+
         return redirect()->back()->with('success', 'Rated successfully');
+    }
+    public function fetchRatingForm($ratingFormID)
+    {
+        $ratingForm = RatingForm::find($ratingFormID);
+
+        return response()->json($ratingForm);
+    }
+    public function checkBookingFeedback($bookingID)
+    {
+        $exists = Feedback::where('bookingID', $bookingID)->exists();
+
+        return response()->json(['exists' => $exists]);
     }
 }
