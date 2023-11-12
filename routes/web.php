@@ -52,6 +52,7 @@ Route::get('/home', [HomeController::class, 'index'])
 Route::get('/post', [HomeController::class, 'post'])
     ->middleware(['auth', 'admin']);
 
+
 Route::get('/packages', [PackageController::class, 'index'])->name('packages');
 Route::get('/my-bookings', [BookingController::class, 'showBookings'])->name('my-bookings');
 
@@ -75,6 +76,8 @@ Route::delete('/delete-image/{id}', [GalleryController::class, 'deleteImage'])->
 Route::get('/booking/{packageId}', [BookingController::class, 'showBookingForm'])->name('booking.form');
 Route::post('/store-booking', [BookingController::class, 'store'])->name('store.booking');
 Route::get('/events', [BookingController::class, 'getEvents'])->name('events');
+Route::put('/bookings/{id}/update', [BookingController::class, 'updateBookings'])->name('bookings.update');
+
 
 Route::post('/send-sms', [BookingController::class, 'sendSms'])->name('send-sms');
 Route::post('/disapprove', [BookingController::class, 'addReason'])->name('add-reason');

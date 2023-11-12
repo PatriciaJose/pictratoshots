@@ -121,7 +121,6 @@
                         },
                         success: function() {
                             Swal.fire('Deleted!', 'The package has been deleted.', 'success').then(() => {
-                                // Reload the page or update the table
                                 location.reload();
                             });
                         },

@@ -16,13 +16,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/5a10e0b94b.js" crossorigin="anonymous"></script>
-    <!-- Jquery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Toastr -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -226,8 +226,8 @@
 
     .gallery .gallery-filter .filter-item {
         color: black;
-        font-size: 18px;
-        text-transform: uppercase;
+        font-size: 16px;
+        text-transform:capitalize;
         display: inline-block;
         margin: 0 10px;
         cursor: pointer;
@@ -237,8 +237,8 @@
     }
 
     .gallery .gallery-filter .filter-item.active {
-        color: grey;
-        border-color: grey;
+        color: #9D0520;
+        border-color: #9D0520;
     }
 
 

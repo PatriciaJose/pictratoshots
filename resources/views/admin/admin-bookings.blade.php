@@ -32,8 +32,8 @@
                             <tr>
                                 <td>{{ $booking->package->package_name }}</td>
                                 <td>{{ $booking->client->email }}</td>
-                                <td>{{ $booking->session_date }}</td>
-                                <td>{{ $booking->session_time }}</td>
+                                <td>{{ \Carbon\Carbon::parse($booking->session_date)->format('F d, Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($booking->session_time)->format('h:i A') }}</td>
                                 <td>{{ $booking->location }}</td>
                                 <td>{{ $booking->status }}</td>
                                 <td>{{ $booking->disapproval_reason }}</td>

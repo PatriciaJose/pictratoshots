@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Welcome to Pictratoshots Studio</title>
     <link rel="icon" type="text/css" href="{{ asset('storage/images/Picture1.png') }}">
@@ -215,8 +216,8 @@
 
         .gallery .gallery-filter .filter-item {
             color: black;
-            font-size: 18px;
-            text-transform: uppercase;
+            font-size: 16px;
+            text-transform: capitalize;
             display: inline-block;
             margin: 0 10px;
             cursor: pointer;
@@ -226,8 +227,8 @@
         }
 
         .gallery .gallery-filter .filter-item.active {
-            color: grey;
-            border-color: grey;
+            color: #9D0520;
+            border-color: #9D0520;
         }
 
         .gallery .gallery-item {
@@ -805,7 +806,7 @@
             </div>
             <div class="item" style="background-image: url('storage/images/studio.jpg');">
                 <div class="content">
-                    <div class="name text-white"> <span class="text-dark">Welcome</span> to  Pictrato<span class="text-dark">Shots</span></div>
+                    <div class="name"><span class="text-dark">Welcome to PictratoShots Studio!</span></div>
                     <div class="des text-white">Collaborate with us in capturing the best memories of your lifetime.</div>
                     <a href="{{ route('login') }}"><button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Book Now</button></a>
                 </div>
@@ -820,7 +821,7 @@
             </div>
             <div class="item" style="background-image: url('storage/images/studio.jpg');">
                 <div class="content">
-                    <div class="name text-white">Welcome to Pictratoshots Studio!</div>
+                    <div class="name"><span class="text-dark">Welcome to PictratoShots Studio!</span></div>
                     <div class="des text-white">Collaborate with us in capturing the best memories of your lifetime.</div>
                     <a href="{{ route('login') }}"><button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Book Now</button></a>
                 </div>
@@ -847,7 +848,7 @@
                 @foreach ($photoshootTypes as $photoshootType)
                 <div class="col-12 col-sm-6 col-lg-4">
                     <div class="text-center px-xl-2">
-                        <span class="h2 badge bg-primary rounded-circle">
+                        <span class="h2 badge rounded-circle" style="background-color: #9D0520;">
                             <h5 class="pt-2 px-2">{{ $counter++ }}</h5>
                         </span>
                         <h5 class="m-2">{{ $photoshootType->type_name }}</h5>
@@ -867,12 +868,12 @@
     <section class="gallery">
         <div class="container">
             <div class="row">
-                <h6 class="text-center">GALLERY</h6>
+                <small class="text-center">GALLERY</small>
                 <h1 class="text-center mb-3">Our Recent Works</h1>
                 <div class="gallery-filter">
-                    <span class="filter-item active" data-filter="all">All</span>
+                    <span class="filter-item active small" data-filter="all">All</span>
                     @foreach ($photoshootTypes as $photoshootType)
-                    <span class="filter-item" data-filter="{{ $photoshootType->type_name }}">{{ $photoshootType->type_name }}</span>
+                    <span class="filter-item small" data-filter="{{ $photoshootType->type_name }}">{{ $photoshootType->type_name }}</span>
                     @endforeach
                 </div>
             </div>
@@ -890,19 +891,19 @@
                 @endforeach
             </div>
             <div class="text-center my-3">
-                <a href="{{ route('login') }}"><button class="btn">See All</button></a>
+                <a href="{{ route('login') }}"><button class="px-5 py-2" style="background-color:black;color:white;border-top-right-radius: 18px;border-bottom-left-radius:18px">See All</button></a>
             </div>
         </div>
     </section>
 
-    <div class="testimonial-slider">
+    <div class="testimonial-slider py-5 my-3">
         <div id="carouselExampleControls" class="carousel carousel-dark" data-bs-ride="carousel">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="testimonial-title">
                             <i class="bi bi-quote display-2"></i>
-                            <h2 class="fw-bold display-6 text-secondary">What our customers say</h2>
+                            <h2 class="fw-bold display-6 text-dark">What our customers say</h2>
                         </div>
                         <button id="prev" class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -936,11 +937,11 @@
         </div>
     </div>
 
-    <div class="container my-5" id="contactUs">
+    <div class="container mt-3 pt-5" id="contactUs">
         <main class="row">
             <section class="col left">
                 <div class="contactTitle">
-                    <h2>Get In Touch</h2>
+                    <h2>Contact Us</h2>
                     <p>Feel free to reach out to us anytime.We will get back to you as soon as possible.</p>
                 </div>
                 <div class="contactInfo">
@@ -981,28 +982,7 @@
                 </div>
             </section>
             <section class="col right">
-                <form class="messageForm">
-                    <div class="inputGroup halfWidth">
-                        <input type="text" name="" required="required">
-                        <label>Your Name</label>
-                    </div>
-                    <div class="inputGroup halfWidth">
-                        <input type="email" name="" required="required">
-                        <label>Email</label>
-                    </div>
-                    <div class="inputGroup fullWidth">
-                        <input type="text" name="" required="required">
-                        <label>Subject</label>
-                    </div>
-                    <div class="inputGroup fullWidth">
-                        <textarea required="required"></textarea>
-                        <label>Say Something</label>
-                    </div>
-                    <div class="inputGroup fullWidth">
-                        <button>Send Message</button>
-                    </div>
-
-                </form>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1916.5594563545606!2d120.54257590323688!3d16.111148387545043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3391136116e86e5f%3A0x95a4c2c68dfc97aa!2sPictratoshots%20Studio%20-%20Pozorrubio!5e0!3m2!1sen!2sph!4v1699778716477!5m2!1sen!2sph" width="600" height="450" style="border:0;border-radius:15px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </section>
         </main>
     </div>
@@ -1021,9 +1001,8 @@
 
         filterContainer.addEventListener("click", (event) => {
             if (event.target.classList.contains("filter-item")) {
-                // deactivate existing active 'filter-item'
+
                 filterContainer.querySelector(".active").classList.remove("active");
-                // activate new 'filter-item'
                 event.target.classList.add("active");
                 const filterValue = event.target.getAttribute("data-filter");
                 galleryItems.forEach((item) => {

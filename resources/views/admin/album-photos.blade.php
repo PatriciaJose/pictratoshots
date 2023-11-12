@@ -45,68 +45,81 @@
         </div>
 
         <script>
-            const photoInput = document.getElementById('photoUpload');
-            const photoPreviews = document.getElementById('photoPreviews');
-            const noImageChosen = document.getElementById('noImageChosen'); // Get the placeholder element
-            const selectedFiles = [];
+    const photoInput = document.getElementById('photoUpload');
+    const photoPreviews = document.getElementById('photoPreviews');
+    const noImageChosen = document.getElementById('noImageChosen');
+    let selectedFiles = [];
 
-            photoInput.addEventListener('change', function(e) {
-                if (this.files.length > 0) {
-                    // Hide the "No image chosen" text when an image is selected
-                    noImageChosen.style.display = 'none';
-                } else {
-                    // Show the "No image chosen" text when no image is selected
-                    noImageChosen.style.display = 'block';
-                }
+    photoInput.addEventListener('change', function (e) {
+        const newFiles = Array.from(this.files);
 
-                for (let i = 0; i < this.files.length; i++) {
-                    const file = this.files[i];
-                    if (!selectedFiles.includes(file)) {
-                        selectedFiles.push(file);
+        // Add newly selected files to the existing selectedFiles array
+        selectedFiles = selectedFiles.concat(newFiles);
 
-                        const reader = new FileReader();
+        // Display previews for all selected files
+        displayPreviews();
 
-                        reader.onload = function(e) {
-                            const preview = document.createElement('div');
-                            preview.classList.add('col-md-4', 'position-relative');
-                            preview.style.marginTop = '20px';
+        // Update the file input to include all selected files
+        const newFileList = new DataTransfer();
+        selectedFiles.forEach((file) => newFileList.items.add(file));
+        photoInput.files = newFileList.files;
+    });
 
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.classList.add('img-fluid');
+    function displayPreviews() {
+        // Clear existing previews
+        photoPreviews.innerHTML = '';
 
-                            const removeButton = document.createElement('button');
-                            removeButton.innerText = 'X';
-                            removeButton.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'position-absolute', 'top-0', 'end-0');
+        if (selectedFiles.length > 0) {
+            noImageChosen.style.display = 'none';
+        } else {
+            noImageChosen.style.display = 'block';
+        }
 
-                            removeButton.addEventListener('click', function() {
-                                photoPreviews.removeChild(preview);
+        // Display previews for all selected files
+        selectedFiles.forEach((file) => {
+            const reader = new FileReader();
 
-                                const fileIndex = selectedFiles.indexOf(file);
-                                if (fileIndex !== -1) {
-                                    selectedFiles.splice(fileIndex, 1);
-                                }
+            reader.onload = function (e) {
+                const preview = document.createElement('div');
+                preview.classList.add('col-md-4', 'position-relative');
+                preview.style.marginTop = '20px';
 
-                                const newFileList = new DataTransfer();
-                                selectedFiles.forEach((file) => newFileList.items.add(file));
-                                photoInput.files = newFileList.files;
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('img-fluid');
 
-                                // Show the "No image chosen" text when all images are removed
-                                if (selectedFiles.length === 0) {
-                                    noImageChosen.style.display = 'block';
-                                }
-                            });
+                const removeButton = document.createElement('button');
+                removeButton.innerText = 'X';
+                removeButton.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'position-absolute', 'top-0', 'end-0');
 
-                            preview.appendChild(img);
-                            preview.appendChild(removeButton);
-                            photoPreviews.appendChild(preview);
-                        };
+                removeButton.addEventListener('click', function () {
+                    // Remove the preview
+                    photoPreviews.removeChild(preview);
 
-                        reader.readAsDataURL(file);
+                    // Remove the file from the selectedFiles array
+                    selectedFiles = selectedFiles.filter((selectedFile) => selectedFile !== file);
+
+                    // Update the file input to exclude the removed file
+                    const newFileList = new DataTransfer();
+                    selectedFiles.forEach((file) => newFileList.items.add(file));
+                    photoInput.files = newFileList.files;
+
+                    // If no files are selected, display the "No Image Preview" message
+                    if (selectedFiles.length === 0) {
+                        noImageChosen.style.display = 'block';
                     }
-                }
-            });
-        </script>
+                });
+
+                preview.appendChild(img);
+                preview.appendChild(removeButton);
+                photoPreviews.appendChild(preview);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+</script>
+
 
         <div class="card mt-3">
             <div class="card-body">
@@ -137,13 +150,11 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Add a click event listener to the delete buttons
             const deleteButtons = document.querySelectorAll('.delete-image');
             deleteButtons.forEach(function(button) {
                 button.addEventListener('click', function() {
                     const imageId = button.getAttribute('data-image-id');
 
-                    // Show a SweetAlert confirmation dialog
                     Swal.fire({
                         title: 'Are you sure you want to delete this image?',
                         text: 'You won\'t be able to revert this!',

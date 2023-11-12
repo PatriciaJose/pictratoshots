@@ -10,7 +10,7 @@
         <div class="row mt-3">
             @foreach ($album->images as $image)
             <div class="col-md-4">
-                <img src="{{ asset('images/photoshoots/' . $image->image_path) }}" alt="{{ $image->caption }}" class="img-fluid">
+                <img src="{{ asset('storage/images/photoshoots/'. $image->image_path) }}" class="img-fluid">
             </div>
             @endforeach
         </div>

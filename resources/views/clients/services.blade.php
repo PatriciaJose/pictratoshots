@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container mt-5 pt-5">
-        <h1>Photoshoot Packages</h1>
+        <h1 class="text-center">Photoshoot Packages</h1>
     </div>
     <div class="container-fluid">
         <div class="container p-5">
@@ -38,7 +38,7 @@
                                     <li>{{ $inclusion }}</li>
                                     @endforeach
                                 </ul>
-                                <a href="{{ route('booking.form', ['packageId' => $package->id]) }}">Schedule a Session</a>
+                                <a href="{{ route('booking.form', ['packageId' => $package->id]) }}" class="text-dark">Schedule a Session</a>
                             </div>
                         </div>
                         @endif

@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactFormMail;
 use App\Models\AdminNotification;
 use Twilio\Rest\Client;
 use App\Models\Booking;
 use App\Models\Package;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Notification;
-use App\Notifications\BookingStatusNotification;
-
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -146,7 +145,7 @@ class BookingController extends Controller
             $approve->clientID = $clientId;
             $approve->notification_type = 'canceled';
             $approve->save();
-            
+
             $notification = new AdminNotification();
             $notification->notification_type = 'canceled';
             $notification->bookingID = $booking->id;
@@ -167,5 +166,18 @@ class BookingController extends Controller
         $booking->save();
 
         return redirect()->back()->with('message', 'Reason added successfully.');
+    }
+
+    public function updateBookings(Request $request, $id)
+    {
+        $data = $request->validate([
+            'session_date' => 'required|date',
+            'session_time' => 'required|date_format:H:i',
+            'location' => 'required|string',
+        ]);
+
+        Booking::find($id)->update($data);
+
+        return redirect()->back()->with('success', 'Bookings updated successfully');
     }
 }

@@ -23,11 +23,12 @@
     <script src="https://kit.fontawesome.com/5a10e0b94b.js" crossorigin="anonymous"></script>
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Toastr -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <!-- Sweet Alert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <!-- Data Table -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
