@@ -1,19 +1,17 @@
 <x-admin-layout>
     <div class="dashboard-main">
         <div class="container">
-            <div class="row py-3">
-                <div class="col-12 d-flex justify-content-between align-items-center">
-                    <div class="dashboard-title-text">
-                        <h2>Pictratoshots Dashboard</h2>
-                        <p class="text-grey">Storyteller Film Since 2015.</p>
-                    </div>
+            <div class="card my-3">
+                <div class="card-body">
+                    <h2>Pictratoshots Dashboard</h2>
+                    <p class="text-grey">Storyteller Film Since 2015.</p>
                 </div>
             </div>
 
             <div class="overview-section p-4">
                 <div class="row overview-section-title">
                     <h4>Bookings Overview</h4>
-                    <p class="small text-grey">Check <span class="text-blue">bookings</span> history for detailed overview of your sessions</p>
+                    <p class="small text-grey">Check <a class="text-decoration-none text-primary" href="{{ route('booking-management') }}">bookings</a> section for detailed overview of your sessions</p>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-lg-3">
@@ -132,24 +130,40 @@
                         }
                     },
                     maintainAspectRatio: false,
+                    plugins: {
+                        legend: false,
+                    }
                 }
             });
         });
 
+
+        var labels = <?= json_encode($labels, JSON_HEX_TAG); ?>;
+        var counts = <?= json_encode($counts, JSON_HEX_TAG); ?>;
+
+
+        var alternateColors = ['#9D052080', '#9D0520'];
+
+        var backgroundColors = counts.map(function(_, index) {
+            return alternateColors[index % alternateColors.length];
+        });
+
         var pieData = {
-            labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'],
+            labels: labels,
             datasets: [{
-                data: [12, 19, 3, 5, 2],
-                backgroundColor: ['red', 'blue', 'green', 'yellow', 'purple']
+                data: counts,
+                backgroundColor: backgroundColors
             }]
         };
-
 
         var pieChart = new Chart(document.getElementById('pieChart'), {
             type: 'pie',
             data: pieData,
             options: {
                 maintainAspectRatio: false,
+                plugins: {
+                    legend: false,
+                }
             }
         });
     </script>
@@ -265,7 +279,7 @@
 
         .carousel .overview b {
             text-transform: uppercase;
-            color: red;
+            color: #9D0520;
         }
 
         .carousel .carousel-indicators {
@@ -292,49 +306,48 @@
             border: 5px double;
         }
     </style>
-<div class="container-lg mt-5">
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h2 class="text-center mb-4">Feedbacks and Ratings</h2>
-                    <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
-                        <ol class="carousel-indicators">
-                            @foreach($feedbacks as $key => $feedback)
-                            <li data-bs-target="#myCarousel" data-bs-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}"></li>
-                            @endforeach
-                        </ol>
-                        <div class="carousel-inner">
-                            @for($i = 0; $i < count($feedbacks); $i+=2)
-                            <div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
-                                <div class="row">
-                                    @foreach([$feedbacks[$i], $feedbacks[$i+1]] as $feedback)
-                                    @if($feedback)
-                                    <div class="col-6">
-                                        <div class="testimonial-wrapper">
-                                            <div class="testimonial">{{ $feedback->message }}</div>
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <div class="overview">
-                                                        <div class="name"><b>{{ $userNames[$feedback->bookingID] }}</b></div>
-                                                        <div class="star-rating">
-                                                            <ul class="list-inline">
-                                                                @for($j = 0; $j < $feedback->rating; $j++)
-                                                                <li class="list-inline-item"><i class="fa fa-star"></i></li>
-                                                                @endfor
-                                                                @for($j = 0; $j < 5 - $feedback->rating; $j++)
-                                                                <li class="list-inline-item"><i class="fa fa-star-o"></i></li>
-                                                                @endfor
-                                                            </ul>
+    <div class="container-lg mt-5">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2 class="text-center mb-4">Feedbacks and Ratings</h2>
+                        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <ol class="carousel-indicators">
+                                @foreach($feedbacks as $key => $feedback)
+                                <li data-bs-target="#myCarousel" data-bs-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}"></li>
+                                @endforeach
+                            </ol>
+                            <div class="carousel-inner">
+                                @for($i = 0; $i < count($feedbacks); $i+=2) <div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
+                                    <div class="row">
+                                        @foreach([$feedbacks[$i], $feedbacks[$i+1]] as $feedback)
+                                        @if($feedback)
+                                        <div class="col-6">
+                                            <div class="testimonial-wrapper">
+                                                <div class="testimonial">{{ $feedback->message }}</div>
+                                                <div class="media">
+                                                    <div class="media-body">
+                                                        <div class="overview">
+                                                            <div class="name"><b>{{ $userNames[$feedback->bookingID] }}</b></div>
+                                                            <div class="star-rating">
+                                                                <ul class="list-inline">
+                                                                    @for($j = 0; $j < $feedback->rating; $j++)
+                                                                        <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                                                                        @endfor
+                                                                        @for($j = 0; $j < 5 - $feedback->rating; $j++)
+                                                                            <li class="list-inline-item"><i class="fa fa-star-o"></i></li>
+                                                                            @endfor
+                                                                </ul>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
+                                        @endforeach
                                     </div>
-                                    @endif
-                                    @endforeach
-                                </div>
                             </div>
                             @endfor
                         </div>
@@ -343,7 +356,7 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
 
 </x-admin-layout>

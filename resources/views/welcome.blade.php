@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Welcome to Pictratoshots</title>
+    <title>Welcome to Pictratoshots Studio</title>
     <link rel="icon" type="text/css" href="{{ asset('storage/images/Picture1.png') }}">
 
     <!-- Fonts -->
@@ -26,7 +26,7 @@
             scrollbar-color: rgb(92, 73, 255) rgb(255, 255, 255);
         }
 
-        /* Works on Chrome, Edge, and Safari */
+
         *::-webkit-scrollbar {
             width: 8px;
         }
@@ -144,13 +144,14 @@
         }
 
         .item .name {
-            font-size: 40px;
+            font-size: 35px;
             font-weight: bold;
             opacity: 0;
             animation: showcontent 1s ease-in-out 1 forwards
         }
 
         .item .des {
+            font-size: 14px;
             margin: 20px 0;
             opacity: 0;
             animation: showcontent 1s ease-in-out 0.3s 1 forwards
@@ -769,7 +770,7 @@
             </ul>
 
             <a class="navbar-brand d-none d-lg-block collapse navbar-collapse justify-content-center" href="/">
-                <h2 class="text-center text-white"><b>Pictratoshots</b></h2>
+                <h2 class="text-center text-white"><img src="{{ asset('storage/images/Picture1.png') }}" width="50"> <b>Pictratoshots</b></h2>
             </a>
 
             <ul class="navbar-nav collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
@@ -797,30 +798,30 @@
         <div id="slide">
             <div class="item" style="background-image: url('storage/images/camera.jpg');">
                 <div class="content">
-                    <div class="name">LUNDEV</div>
-                    <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anhchay mat tieu</div>
+                    <div class="name text-white"><span class="text-dark">Step</span> into the <span class="text-dark">Spotlight</span></div>
+                    <div class="des text-white"> Explore, Experience, and Embrace the Art of Photography. Your Journey Begins Here!</div>
                     <a href="#contactUs"><button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Contact Us</button></a>
                 </div>
             </div>
             <div class="item" style="background-image: url('storage/images/studio.jpg');">
                 <div class="content">
-                    <div class="name">LUNDEV</div>
-                    <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anh chay mat tieu</div>
+                    <div class="name text-white"> <span class="text-dark">Welcome</span> to  Pictrato<span class="text-dark">Shots</span></div>
+                    <div class="des text-white">Collaborate with us in capturing the best memories of your lifetime.</div>
                     <a href="{{ route('login') }}"><button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Book Now</button></a>
                 </div>
             </div>
 
             <div class="item" style="background-image: url('storage/images/camera.jpg');">
                 <div class="content">
-                    <div class="name">LUNDEV</div>
-                    <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anhchay mat tieu</div>
+                    <div class="name text-white"><span class="text-dark">Step</span> into the <span class="text-dark">Spotlight</span></div>
+                    <div class="des text-white"> Explore, Experience, and Embrace the Art of Photography. Your Journey Begins Here!</div>
                     <a href="#contactUs"><button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Contact Us</button></a>
                 </div>
             </div>
             <div class="item" style="background-image: url('storage/images/studio.jpg');">
                 <div class="content">
-                    <div class="name">LUNDEV</div>
-                    <div class="des">Tinh ru anh di chay pho, chua kip chay pho thi anh chay mat tieu</div>
+                    <div class="name text-white">Welcome to Pictratoshots Studio!</div>
+                    <div class="des text-white">Collaborate with us in capturing the best memories of your lifetime.</div>
                     <a href="{{ route('login') }}"><button style="border-top-left-radius: 5px; border-bottom-right-radius: 5px;">Book Now</button></a>
                 </div>
             </div>
@@ -835,7 +836,7 @@
             <div class="row justify-content-md-center">
                 <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
                     <h2 class="mb-4 display-5 text-center">What we do?</h2>
-                    <p class="text-secondary mb-5 text-center">We craft compelling narratives through the lens, delivering timeless moments and powerful storytelling.</p>
+                    <p class="text-secondary mb-5 text-center">We specialize in providing professional photographic coverage for a wide range of occasions and events.</p>
                     <hr class="w-50 mx-auto mb-5 mb-xl-9 border-dark-subtle">
                 </div>
             </div>
@@ -866,8 +867,8 @@
     <section class="gallery">
         <div class="container">
             <div class="row">
-                <h5 class="text-center">Gallery</h5>
-                <h1 class="text-center">Our Recent Works</h1>
+                <h6 class="text-center">GALLERY</h6>
+                <h1 class="text-center mb-3">Our Recent Works</h1>
                 <div class="gallery-filter">
                     <span class="filter-item active" data-filter="all">All</span>
                     @foreach ($photoshootTypes as $photoshootType)
@@ -889,7 +890,7 @@
                 @endforeach
             </div>
             <div class="text-center my-3">
-            <a href="{{ route('login') }}"><button class="btn">See All</button></a>
+                <a href="{{ route('login') }}"><button class="btn">See All</button></a>
             </div>
         </div>
     </section>
@@ -944,31 +945,31 @@
                 </div>
                 <div class="contactInfo">
                     <div class="iconGroup">
-                        <div class="icon">
+                        <div class="icon p-4">
                             <i class="fa-solid fa-phone"></i>
                         </div>
                         <div class="details">
                             <span>Phone</span>
-                            <span>+00 110 111 00</span>
+                            <span>0905 264 9919</span>
                         </div>
                     </div>
                     <div class="iconGroup">
-                        <div class="icon">
+                        <div class="icon p-4">
                             <i class="fa-solid fa-envelope"></i>
                         </div>
                         <div class="details">
                             <span>Email</span>
-                            <span>name.tutorial@gmail.com</span>
+                            <span>pictratoshots@gmail.com</span>
                         </div>
                     </div>
 
                     <div class="iconGroup">
-                        <div class="icon">
+                        <div class="icon p-4">
                             <i class="fa-solid fa-location-dot"></i>
                         </div>
                         <div class="details">
                             <span>Location</span>
-                            <span>X Street, Y Road, San Fransisco</span>
+                            <span>SPA 2nd flor Diocese Bldg. Penoy Street, Poblacion District III, Pozorrubio, Pangasinan, PH</span>
                         </div>
                     </div>
 
@@ -1005,47 +1006,7 @@
             </section>
         </main>
     </div>
-    <footer class="footer-distributed bg-dark">
-        <div class="footer-left">
-            <h3 class="text-white">Pictratoshots</h3>
-            <p class="footer-links text-white">
-                <a href="#">Home</a>
-                |
-                <a href="#">Services</a>
-                |
-                <a href="#">Gallery</a>
-                |
-                <a href="#">Contact Us</a>
-            </p>
-            <p class="footer-company-name">Copyright © 2023 <strong>Pictratoshots Developer</strong> All rights reserved</p>
-        </div>
-        <div class="footer-center text-white">
-            <div>
-                <i class="fa fa-map-marker"></i>
-                <p class="text-white">Pozorrubio,
-                    Pangasinan</p>
-            </div>
-            <div>
-                <i class="fa fa-phone"></i>
-                <p class="text-white">09123456789</p>
-            </div>
-            <div>
-                <i class="fa fa-envelope"></i>
-                <p class="text-white"><a href="/">pictratoshots@gmail.com</a></p>
-            </div>
-        </div>
-        <div class="footer-right">
-            <p class="footer-company-about">
-                <span class="text-white">About the company</span>
-                <strong>Pictratroshots</strong> is a creative storytelling company specializing in film and photography. We capture and share captivating narratives through the art of visual storytelling, delivering memorable and emotive content.
-            </p>
-            <div class="footer-icons">
-                <a href="#"><i class="fa fa-facebook"></i></a>
-                <a href="#"><i class="fa fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-            </div>
-        </div>
-    </footer>
+    @include('layouts.footer')
     <script>
         document.getElementById('next').onclick = function() {
             let lists = document.querySelectorAll('.item');

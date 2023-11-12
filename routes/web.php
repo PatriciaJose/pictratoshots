@@ -53,6 +53,8 @@ Route::get('/post', [HomeController::class, 'post'])
     ->middleware(['auth', 'admin']);
 
 Route::get('/packages', [PackageController::class, 'index'])->name('packages');
+Route::get('/my-bookings', [BookingController::class, 'showBookings'])->name('my-bookings');
+
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
 
 Route::get('/admin-feedback', [FeedbackController::class, 'index'])->name('feedback.index');

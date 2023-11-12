@@ -190,7 +190,11 @@
                                 notificationTitle = "<i class=\"fa-solid fa-calendar-check\"></i> New Booking";
                                 notificationContent = `<a href="{{ route('booking-management') }}"><button class="btn btn-secondary w-100 mt-3">View Bookings</button></a>`;
                                 addNotificationItem(notificationTitle, notificationContent, notification.created_at);
-                            } else if (notification.notification_type === 'session-today') {
+                            } else  if (notification.notification_type === 'canceled') {
+                                notificationTitle = "<i class=\"fa-solid fa-ban\"></i> Booking Canceled";
+                                notificationContent = `<a href="{{ route('booking-management') }}"><button class="btn btn-secondary w-100 mt-3">View Bookings</button></a>`;
+                                addNotificationItem(notificationTitle, notificationContent, notification.created_at);
+                            }else if (notification.notification_type === 'session-today') {
                                 var notificationTitle = "<i class=\"fa-solid fa-business-time\"></i> Session Today";
                                 var notificationContent = `<a href="{{ route('booking-management') }}"><button class="btn btn-secondary w-100 mt-3">View Calendar</button></a>`;
                                 addNotificationItem(notificationTitle, notificationContent, new Date());

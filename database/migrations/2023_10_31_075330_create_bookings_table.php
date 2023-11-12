@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('session_date');
             $table->string('location');
             $table->time('session_time');
-            $table->enum('status', ['Approved', 'Pending', 'Disapproved', 'Finish'])->default('Pending');
+            $table->enum('status', ['Approved', 'Pending', 'Disapproved', 'Finish','Canceled'])->default('Pending');
             $table->text('disapproval_reason')->nullable(); 
             $table->timestamps();
             $table->foreign('packageID')->references('id')->on('packages');

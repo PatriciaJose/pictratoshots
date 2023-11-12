@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('bookingID')->nullable();
             $table->unsignedBigInteger('ratingFormID')->nullable();
             $table->unsignedBigInteger('weatherID')->nullable();
-            $table->enum('notification_type', ['booking-approved', 'booking-disapproved','weather', 'rating']);
+            $table->enum('notification_type', ['booking-approved', 'booking-disapproved','weather', 'rating','canceled']);
             $table->enum('status', ['read', 'unread'])->default('unread');
             $table->timestamp('read_at')->nullable();
             $table->timestamps();

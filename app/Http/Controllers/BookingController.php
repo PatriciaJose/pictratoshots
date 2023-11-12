@@ -15,6 +15,13 @@ use App\Notifications\BookingStatusNotification;
 
 class BookingController extends Controller
 {
+    public function showBookings()
+    {
+        $bookings = Booking::where('clientID', auth()->user()->id)->get();
+
+        return view('clients.my-bookings', compact('bookings'));
+    }
+
     public function showBookingForm($packageId)
     {
         $package = Package::find($packageId);
@@ -132,6 +139,19 @@ class BookingController extends Controller
             $approve->notification_type = 'booking-disapproved';
             $approve->save();
         } else if ($newStatus == 'finish') {
+            return redirect()->back()->with('message', 'Booking status updated successfully.');
+        } else if ($newStatus == 'Canceled') {
+            $approve = new Notification();
+            $approve->bookingID = $bookingId;
+            $approve->clientID = $clientId;
+            $approve->notification_type = 'canceled';
+            $approve->save();
+            
+            $notification = new AdminNotification();
+            $notification->notification_type = 'canceled';
+            $notification->bookingID = $booking->id;
+            $notification->save();
+
             return redirect()->back()->with('message', 'Booking status updated successfully.');
         }
     }

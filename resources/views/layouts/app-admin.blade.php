@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Pictratoshots</title>
+    <title>Pictratoshots Studio</title>
     <link rel="icon" type="text/css" href="{{ asset('storage/images/Picture1.png') }}">
 
     <!-- Scripts -->

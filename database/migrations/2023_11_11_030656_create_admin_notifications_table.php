@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('bookingID')->nullable();
             $table->unsignedBigInteger('feedbackID')->nullable();
-            $table->enum('notification_type', ['new-bookings', 'session-today','new-feedback']);
+            $table->enum('notification_type', ['new-bookings', 'session-today','new-feedback','canceled']);
             $table->enum('status', ['read', 'unread'])->default('unread');
             $table->timestamp('read_at')->nullable();
             $table->timestamps();

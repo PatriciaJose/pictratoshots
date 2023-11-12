@@ -66,9 +66,10 @@
         packageTabs.show();
     </script>
     <style>
-        .nav-link{
+        .nav-link {
             color: #9D0520;
         }
+
         .pricingTable,
         .pricingTable .pricingTable-header {
             position: relative
@@ -88,23 +89,6 @@
             z-index: 1
         }
 
-        .pricingTable .pricingTable-header:after,
-        .pricingTable .pricingTable-header:before {
-            content: "";
-            border-top: 10px solid #48434a;
-            border-left: 10px solid transparent;
-            position: absolute;
-            bottom: -10px;
-            left: -10px
-        }
-
-        .pricingTable .pricingTable-header:after {
-            border-left: none;
-            border-right: 10px solid transparent;
-            left: auto;
-            right: -10px
-        }
-
         .pricingTable .title {
             padding: 25px 5px;
             margin: 0;
@@ -117,58 +101,15 @@
             position: relative
         }
 
-        .pricingTable .title:after,
-        .pricingTable .title:before {
-            content: "";
-            border-left: 10px solid #c2c8c9;
-            border-top: 37px solid transparent;
-            border-bottom: 37px solid transparent;
-            position: absolute;
-            bottom: -114px;
-            left: -30px
-        }
-
-        .pricingTable .title:after {
-            border-left: none;
-            border-right: 10px solid #c2c8c9;
-            left: auto;
-            right: -30px
-        }
-
         .pricingTable .price-value {
             display: block;
             padding: 15px 5px;
-            margin: 0 -10px;
+
             background: #9D0520;
             font-size: 36px;
             font-weight: 700;
             color: #fff;
             position: relative
-        }
-
-        .pricingTable .price-value:after,
-        .pricingTable .price-value:before {
-            content: "";
-            width: 30px;
-            height: 90%;
-            background: #9D0520;
-            position: absolute;
-            top: 50%;
-            left: -20px;
-            z-index: -1
-        }
-
-        .pricingTable .price-value:after {
-            left: auto;
-            right: -20px
-        }
-
-        .pricingTable .month {
-            font-size: 15px;
-            font-weight: 700;
-            margin-left: 3px;
-            position: relative;
-            top: -12px
         }
 
         .pricingTable .pricing-content {
@@ -185,45 +126,6 @@
             line-height: 30px;
             border-bottom: 2px dashed #e3e3e3;
             position: relative
-        }
-
-        .pricingTable .pricing-content li:last-child {
-            border-bottom: none
-        }
-
-        .pricingTable .pricingTable-signup {
-            display: inline-block;
-            padding: 10px 30px;
-            font-size: 16px;
-            color: #fff;
-            text-transform: uppercase;
-            border: 2px solid #4fc2f8;
-            box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, .08);
-            perspective: 300px;
-            z-index: 1;
-            position: relative;
-            transition: all .3s ease 0s
-        }
-
-        .pricingTable .pricingTable-signup:hover {
-            color: #4fc2f8
-        }
-
-        .pricingTable .pricingTable-signup:before {
-            content: "";
-            width: 100%;
-            height: 100%;
-            background: #4fc2f8;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            transform-origin: left center 0;
-            transition: all .3s ease 0s
-        }
-
-        .pricingTable .pricingTable-signup:hover:before {
-            transform: rotateY(90deg)
         }
 
         @media only screen and (max-width:990px) {

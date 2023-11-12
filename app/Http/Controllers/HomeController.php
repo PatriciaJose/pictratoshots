@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\PhotoshootType;
 use App\Models\Feedback;
 use App\Models\Booking;
+use App\Models\Gallery;
 use App\Models\Package;
 use Illuminate\Support\Facades\Auth;
 
@@ -82,8 +83,14 @@ class HomeController extends Controller
 
                     $userNames[$bookingID] = $userName;
                 }
+                $photoshootTypes = PhotoshootType::all();
 
-                return view("admin.admin-home", compact('pendingBookings', 'approvedBookings', 'rejectedBookings', 'finishedBookings', 'data', 'packageDetails', 'photoshootTypes','userNames','feedbacks'));
+                $labels = $photoshootTypes->pluck('type_name')->toArray();
+                $counts = $photoshootTypes->map(function ($type) {
+                    return $type->albums->flatMap->images->count();
+                })->toArray();
+
+                return view("admin.admin-home", compact('pendingBookings', 'approvedBookings', 'rejectedBookings', 'finishedBookings', 'data', 'packageDetails', 'photoshootTypes', 'userNames', 'feedbacks', 'labels', 'counts'));
             } else {
                 return redirect()->back();
             }
