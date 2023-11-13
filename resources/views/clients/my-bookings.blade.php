@@ -11,11 +11,11 @@
                         <option value="">All</option>
                         <option value="Pending">Pending</option>
                         <option value="Approved">Approved</option>
+                        <option value="Disapproved">Disapproved</option>
                         <option value="Canceled">Canceled</option>
                         <option value="Finish">Finished</option>
                     </select>
                 </div>
-
                 <table id='table_id' class='display mx'>
                     <thead>
                         <tr>
@@ -122,14 +122,23 @@
 
     <script>
         $(document).ready(function() {
-            var table = $('#table_id').DataTable();
+            var table = $('#table_id').DataTable({
+                initComplete: function() {
+                    this.api().columns(5).every(function() {
+                        var column = this;
 
-            $('#statusFilter').on('change', function() {
-                var status = $(this).val();
-                table.column(5).search(status).draw();
+                        $('#statusFilter').on('change', function() {
+                            var status = $.fn.dataTable.util.escapeRegex(
+                                $(this).val().trim()
+                            );
+
+                            var regex = '\\b' + status + '\\b';
+
+                            column.search(regex, true, false).draw();
+                        });
+                    });
+                }
             });
-
-
             window.confirmCancellation = function(bookingId) {
                 Swal.fire({
                     title: 'Are you sure?',

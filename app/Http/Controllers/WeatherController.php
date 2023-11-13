@@ -43,6 +43,7 @@ class WeatherController extends Controller
 
         $approve->save();
 
-        return response()->json(['message' => 'Weather data inserted successfully']);
+        return redirect()->back()->with('message', 'Bookings updated successfully');
+
     }
 }

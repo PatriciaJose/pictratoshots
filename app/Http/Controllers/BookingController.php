@@ -109,7 +109,7 @@ class BookingController extends Controller
         );
 
 
-        return redirect()->back()->with('success', 'SMS sent successfully.');
+        return redirect()->back()->with('message', 'SMS sent successfully.');
     }
 
 
@@ -133,15 +133,9 @@ class BookingController extends Controller
             $approve->notification_type = 'booking-approved';
             $approve->save();
 
-            return redirect()->back()->with('message', 'Booking status updated successfully.');
-        } else if ($newStatus == 'Disapproved') {
-            $approve = new Notification();
-            $approve->bookingID = $bookingId;
-            $approve->clientID = $clientId;
-            $approve->notification_type = 'booking-disapproved';
-            $approve->save();
-        } else if ($newStatus == 'finish') {
-            return redirect()->back()->with('message', 'Booking status updated successfully.');
+            return redirect()->back()->with('message', 'The booking has been approved successfully.');
+        } else if ($newStatus == 'Finish') {
+            return redirect()->back()->with('message', 'The booking has been successfully completed.');
         } else if ($newStatus == 'Canceled') {
             $approve = new Notification();
             $approve->bookingID = $bookingId;
@@ -160,15 +154,24 @@ class BookingController extends Controller
 
     public function addReason(Request $request)
     {
+        $newStatus = "Disapproved";
         $bookingId = $request->input('booking_id');
         $disapprovalReason = $request->input('disapprovalReason');
 
         $booking = Booking::find($bookingId);
+        $clientId = $booking->clientID;
 
+        $booking->status = $newStatus;
         $booking->disapproval_reason = $disapprovalReason;
         $booking->save();
 
-        return redirect()->back()->with('message', 'Reason added successfully.');
+        $approve = new Notification();
+        $approve->bookingID = $bookingId;
+        $approve->clientID = $clientId;
+        $approve->notification_type = 'booking-disapproved';
+        $approve->save();
+
+        return redirect()->back()->with('message', 'The booking has been declined.');
     }
 
     public function updateBookings(Request $request, $id)

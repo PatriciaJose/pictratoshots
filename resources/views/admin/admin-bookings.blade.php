@@ -24,6 +24,17 @@
             </div>
             <div class="card mt-3" id="listContainer" style="display: none;">
                 <div class="card-body">
+                    <div class="mb-3">
+                        <label for="statusFilter" class="form-label">Filter by Status:</label>
+                        <select class="form-select" id="statusFilter">
+                            <option value="">All</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Disapproved">Disapproved</option>
+                            <option value="Canceled">Canceled</option>
+                            <option value="Finish">Finished</option>
+                        </select>
+                    </div>
                     <table id='table_id' class='display mx'>
                         <thead>
                             <tr>
@@ -49,52 +60,51 @@
                                 <td>{{ $booking->disapproval_reason }}</td>
                                 <td>
                                     @if ($booking->status == 'Pending')
-                                    <form id="bookingForm" action="{{ route('update-booking-status') }}" method="post">
+                                    <form id="bookingForm_{{ $booking->id }}" action="{{ route('update-booking-status') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                        <button type="submit" name="status" value="Approved" class="btn btn-primary btn-sm w-100">Accept</button>
-                                        <button type="button" id="rejectButton" class="btn btn-danger btn-sm w-100 mt-1">Reject</button>
+                                        <input type="hidden" name="status" id="status_{{ $booking->id }}">
+                                        <button type="button" class="btn btn-primary btn-sm w-100" onclick="confirmAccept('{{ $booking->id }}')">Accept</button>
+                                        <button type="button" class="btn btn-danger btn-sm w-100 mt-1" onclick="confirmReject('{{ $booking->id }}')">Reject</button>
                                     </form>
 
                                     <script>
-                                        document.getElementById('rejectButton').addEventListener('click', function() {
-                                            rejectBooking();
-                                        });
-
-                                        function rejectBooking() {
-                                            var form = document.getElementById('bookingForm');
-                                            var formData = new FormData(form);
-
-                                            formData.append('status', 'Disapproved');
-
-                                            var xhr = new XMLHttpRequest();
-                                            xhr.open('POST', form.action, true);
-
-                                            xhr.onload = function() {
-                                                if (xhr.status >= 200 && xhr.status < 300) {
-
-                                                    console.log('Booking rejected successfully.');
-                                                } else {
-
-                                                    console.log('Error rejecting booking.');
+                                        function confirmAccept(bookingId) {
+                                            Swal.fire({
+                                                title: 'Are you sure?',
+                                                text: 'You are about to accept this booking.',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: 'green',
+                                                cancelButtonColor: 'grey',
+                                                confirmButtonText: 'Accept'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    document.getElementById('status_' + bookingId).value = 'Approved';
+                                                    document.getElementById('bookingForm_' + bookingId).submit();
                                                 }
-                                            };
+                                            });
+                                        }
 
-                                            xhr.onerror = function() {
-
-                                                console.log('Error connecting to the server.');
-                                            };
-
-                                            xhr.send(formData);
+                                        function confirmReject(bookingId) {
+                                            Swal.fire({
+                                                title: 'Are you sure?',
+                                                text: 'You are about to reject this booking. Please provide a reason.',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: 'green',
+                                                cancelButtonColor: 'grey',
+                                                confirmButtonText: 'Reject'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    $('#reasonModal_' + bookingId).modal('show');
+                                                }
+                                            });
                                         }
                                     </script>
-                                    <script>
-                                        document.getElementById('rejectButton').addEventListener('click', function() {
-                                            $('#reasonModal').modal('show');
-                                        });
-                                    </script>
-                                    <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
+
+                                    <div class="modal fade" id="reasonModal_{{ $booking->id }}" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <form action="{{ route('add-reason') }}" method="post">
                                                     @csrf
@@ -126,9 +136,9 @@
                                             <i class="fa-solid fa-comment-sms"></i>
                                         </button>
                                         <div class="modal fade" id="smsModal" tabindex="-1" role="dialog" aria-labelledby="smsModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
-                                                    <form action="{{ route('send-sms') }}" method="post">
+                                                    <form id="smsForm" action="{{ route('send-sms') }}" method="post" onsubmit="return validateAndConfirm()">
                                                         @csrf
                                                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                                                         <div class="modal-header">
@@ -151,14 +161,169 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <script>
+                                            function validateAndConfirm() {
+
+                                                var smsContent = document.getElementById('smsContent').value;
+
+                                                if (smsContent.trim() === '') {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Validation Error',
+                                                        text: 'SMS Content cannot be empty!',
+                                                    });
+                                                    return false;
+                                                }
+                                                Swal.fire({
+                                                    title: 'Are you sure?',
+                                                    text: 'You are about to send an SMS.',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: 'green',
+                                                    cancelButtonColor: 'grey',
+                                                    confirmButtonText: 'Send'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        document.getElementById('smsForm').submit();
+                                                    }
+                                                });
+
+                                                return false;
+                                            }
+                                        </script>
                                         <button class="btn btn-success btn-sm" onclick="getWeather('{{ $booking->session_date }}', '{{ $booking->session_time }}', '{{ $booking->location }}', '{{ $booking->id }}')">
                                             <i class="fa-solid fa-cloud-sun"></i>
                                         </button>
-                                        <form action="{{ route('update-booking-status') }}" method="post">
+                                        <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog" aria-labelledby="weatherModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content text-start">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="weatherModalLabel">Weather Information</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div id="weatherInfo">
+                                                            <p><strong>Temperature:</strong> <span id="temperature"></span>°C</p>
+                                                            <p><strong>Weather:</strong> <span id="weatherDescription"></span></p>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="form-group">
+                                                            <label for="userNote">Add your note:</label>
+                                                            <textarea class="form-control" id="userNote" rows="4" placeholder="Write a note ..."></textarea>
+                                                            <span id="userNoteError" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button id="notifyUserButton" class="btn btn-primary">Notify User</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            function getWeather(sessionDate, sessionTime, location, bookingId) {
+                                                const dateTime = sessionDate + ' ' + sessionTime;
+
+                                                const timestamp = new Date(dateTime).getTime() / 1000;
+
+                                                $.ajax({
+                                                    url: 'https://api.openweathermap.org/data/2.5/forecast',
+                                                    method: 'GET',
+                                                    data: {
+                                                        q: location,
+                                                        appid: '5e11be8c4280d91cb6eff44b07c62b93',
+                                                        units: 'metric',
+                                                    },
+                                                    success: function(data) {
+                                                        const forecasts = data.list;
+                                                        let closestForecast = forecasts[0];
+                                                        for (const forecast of forecasts) {
+                                                            if (Math.abs(forecast.dt - timestamp) < Math.abs(closestForecast.dt - timestamp)) {
+                                                                closestForecast = forecast;
+                                                            }
+                                                        }
+
+                                                        const temperature = closestForecast.main.temp;
+                                                        const weatherDescription = closestForecast.weather[0].description;
+
+                                                        $('#weatherModal .modal-title').text(`Weather forecast`);
+                                                        $('#temperature').text(temperature.toFixed(2));
+                                                        $('#weatherDescription').text(weatherDescription);
+
+                                                        $('#weatherModal').modal('show');
+
+                                                        $('#notifyUserButton').on('click', function() {
+                                                            const userNote = $('#userNote').val();
+
+                                                            if (!userNote) {
+                                                                $('#userNoteError').text('Please add a note before notifying the user.');
+                                                                return;
+                                                            }
+
+                                                            $('#userNoteError').text('');
+
+                                                            Swal.fire({
+                                                                title: 'Are you sure?',
+                                                                text: 'Do you want to notify the user?',
+                                                                icon: 'question',
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: 'green',
+                                                                cancelButtonColor: 'grey',
+                                                                confirmButtonText: 'Notify!',
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    $.ajax({
+                                                                        url: '/insert-weather',
+                                                                        method: 'POST',
+                                                                        headers: {
+                                                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                                        },
+                                                                        data: {
+                                                                            booking_id: bookingId,
+                                                                            temperature: temperature,
+                                                                            weather_description: weatherDescription,
+                                                                            notes: userNote,
+                                                                        },
+                                                                        success: function(response) {
+
+                                                                        },
+                                                                    });
+
+                                                                }
+                                                            });
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        </script>
+
+                                        <form id="bookingForm_{{ $booking->id }}" action="{{ route('update-booking-status') }}" method="post">
                                             @csrf
                                             <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                            <button type="submit" name="status" value="finish" class="btn btn-sm w-100 btn-primary mt-1">Done</button>
+                                            <input type="hidden" name="status" id="status_{{ $booking->id }}">
+                                            <button type="button" class="btn btn-sm w-100 btn-primary mt-1" onclick="confirmDone('{{ $booking->id }}')">Done</button>
                                         </form>
+
+                                        <script>
+                                            function confirmDone(bookingId) {
+                                                Swal.fire({
+                                                    title: 'Are you sure?',
+                                                    text: 'You are about to mark this booking as done.',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: 'green',
+                                                    cancelButtonColor: 'grey',
+                                                    confirmButtonText: 'Yes'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        document.getElementById('status_' + bookingId).value = 'Finish';
+                                                        document.getElementById('bookingForm_' + bookingId).submit();
+                                                    }
+                                                });
+                                            }
+                                        </script>
                                     </div>
                                     </form>
                                     @elseif ($booking->status == 'Finish')
@@ -219,98 +384,25 @@
             </div>
         </div>
     </div>
-
-
-    <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog" aria-labelledby="weatherModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="weatherModalLabel">Weather Information</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="weatherInfo">
-                        <p><strong>Temperature:</strong> <span id="temperature"></span>°C</p>
-                        <p><strong>Weather:</strong> <span id="weatherDescription"></span></p>
-                    </div>
-                    <hr>
-                    <div class="form-group">
-                        <label for="userNote">Add your note:</label>
-                        <textarea class="form-control" id="userNote" rows="4" placeholder="Write a note ..."></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="notifyUserButton" class="btn btn-primary">Notify User</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
     <script>
-        function getWeather(sessionDate, sessionTime, location, bookingId) {
-            const dateTime = sessionDate + ' ' + sessionTime;
+        $(document).ready(function() {
+            var table = $('#table_id').DataTable({
+                initComplete: function() {
+                    this.api().columns(5).every(function() {
+                        var column = this;
 
-            const timestamp = new Date(dateTime).getTime() / 1000;
+                        $('#statusFilter').on('change', function() {
+                            var status = $.fn.dataTable.util.escapeRegex(
+                                $(this).val().trim()
+                            );
 
-            $.ajax({
-                url: 'https://api.openweathermap.org/data/2.5/forecast',
-                method: 'GET',
-                data: {
-                    q: location,
-                    appid: '5e11be8c4280d91cb6eff44b07c62b93',
-                    units: 'metric',
-                },
-                success: function(data) {
-                    const forecasts = data.list;
-                    let closestForecast = forecasts[0];
-                    for (const forecast of forecasts) {
-                        if (Math.abs(forecast.dt - timestamp) < Math.abs(closestForecast.dt - timestamp)) {
-                            closestForecast = forecast;
-                        }
-                    }
+                            var regex = '\\b' + status + '\\b';
 
-                    const temperature = closestForecast.main.temp;
-                    const weatherDescription = closestForecast.weather[0].description;
-
-                    $('#weatherModal .modal-title').text(`Weather forecast on ${sessionDate} at ${sessionTime}`);
-                    $('#temperature').text(temperature.toFixed(2));
-                    $('#weatherDescription').text(weatherDescription);
-
-                    $('#weatherModal').modal('show');
-
-                    $('#notifyUserButton').on('click', function() {
-                        $.ajax({
-                            url: '/insert-weather',
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            data: {
-                                booking_id: bookingId,
-                                temperature: temperature,
-                                weather_description: weatherDescription,
-                                notes: $('#userNote').val(),
-                            },
-                            success: function(response) {
-                                alert('User successfully notified');
-                            },
-                            error: function() {
-                                alert('Failed to insert weather data into the database.');
-                            },
+                            column.search(regex, true, false).draw();
                         });
                     });
                 }
             });
-        }
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#table_id').DataTable();
         });
     </script>
     <script>
@@ -359,7 +451,18 @@
         });
     </script>
 
-
+    @if (Session::has('message'))
+    <script>
+        console.log("Toastr code is executing.");
+        toastr.options = {
+            "progressBar": true,
+            "closeButton": true,
+        }
+        toastr.success("{{ Session::get('message') }}", "Success!", {
+            timeOut: 3000
+        });
+    </script>
+    @endif
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.9/index.min.js" integrity="sha512-xCMh+IX6X2jqIgak2DBvsP6DNPne/t52lMbAUJSjr3+trFn14zlaryZlBcXbHKw8SbrpS0n3zlqSVmZPITRDSQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.9/index.global.js" integrity="sha512-lU5sd0e7f59Jia30P5oEI5zC3BzVJ4ao+xRA70IIJ2UBzek4PCkPk+MTLIYwXTXGErOqjJ/rLdB3gLK0E5hD0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.9/index.global.min.js" integrity="sha512-XcSx5820pzZbdZYdvoBBKzuOivQv7oQMd+7JuUHh0jhMwqsWHOf+yRfZRxCtV0ySEKWtKblijTdl9pvODcmD7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
