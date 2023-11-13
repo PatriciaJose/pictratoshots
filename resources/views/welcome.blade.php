@@ -842,23 +842,17 @@
                 </div>
             </div>
         </div>
-        <div class="container overflow-hidden">
+        <div class="container">
             <div class="row gy-5">
                 @php $counter = 1 @endphp
                 @foreach ($photoshootTypes as $photoshootType)
                 <div class="col-12 col-sm-6 col-lg-4">
                     <div class="text-center px-xl-2">
-                        <span class="h2 badge rounded-circle" style="background-color: #9D0520;">
-                            <h5 class="pt-2 px-2">{{ $counter++ }}</h5>
+                        <span class="h3 rounded-circle d-inline-block text-white" style="background-color: #9D0520; line-height: 50px; width: 50px; height: 50px;">
+                            {{ $counter++ }}
                         </span>
                         <h5 class="m-2">{{ $photoshootType->type_name }}</h5>
                         <p class="m-0 text-secondary">{{ $photoshootType->type_desc }}</p>
-                        <a href="{{ route('login') }}" class="fw-bold text-decoration-none link-dark small">
-                            Pricing & Packages
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
-                            </svg>
-                        </a>
                     </div>
                 </div>
                 @endforeach
@@ -877,15 +871,120 @@
                     @endforeach
                 </div>
             </div>
-            <div class="row">
+            <div class="row masonry-grid">
                 @foreach ($photoshootTypes as $photoshootType)
                 @foreach ($photoshootType->albums as $album)
-                @foreach ($album->images as $image)
-                <div class="gallery-item {{ $photoshootType->type_name }}">
-                    <div class="gallery-item-inner">
-                        <a href="{{ asset('storage/images/photoshoots/' . $image->image_path) }}"><img src="{{ asset('storage/images/photoshoots/' . $image->image_path) }}" alt="{{ $photoshootType->type_name }}"></a>
+                @foreach ($album->images as $images)
+                <div class="col-lg-4 col-md-12 mb-4 mb-lg-0 gallery-item {{ $photoshootType->type_name }}">
+                    <a href="{{ asset('storage/images/photoshoots/'.$images->image_path.'') }}" data-bs-toggle="modal" data-bs-target="#imageModal">
+                        <img src="{{ asset('storage/images/photoshoots/'.$images->image_path.'') }}" alt="{{ $images->image_name }}" class="w-100 shadow-1-strong rounded mb-4">
+                    </a>
+                </div>
+                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <button type="button" class="btn btn-outline-danger close-button" data-bs-dismiss="modal">x</button>
+                                <div class="position-relative">
+                                    <button type="button" class="btn btn-transparent position-absolute top-50 start-0 translate-middle-y" id="prevButton"><i class="fa-solid fa-chevron-left fa-2x"></i></button>
+                                    <button type="button" class="btn btn-transparent position-absolute top-50 end-0 translate-middle-y" id="nextButton"><i class="fa-solid fa-chevron-right fa-2x"></i></button>
+                                    <img src="" alt="" id="lightboxImage">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <style>
+                    #imageModal.modal {
+                        overflow-y: hidden;
+                    }
+
+                    #imageModal .modal-dialog {
+                        margin: 0;
+                    }
+
+                    #imageModal .modal-content {
+                        height: 100vh;
+                        width: 100vw;
+                    }
+
+                    #imageModal .modal-body {
+                        height: calc(100% - 60px);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    #lightboxImage {
+                        max-width: 100vw;
+                        max-height: 100vh;
+                        width: auto;
+                        height: auto;
+                        transition: transform 0.3s ease-in-out;
+                        transform-origin: top left;
+                    }
+
+                    #lightboxImage.zoomed {
+                        transform: scale(2);
+                    }
+
+
+                    #imageModal .close-button {
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                    }
+                </style>
+                <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        initMasonry();
+                    });
+
+                    function initMasonry() {
+                        var masonry = new Masonry('.masonry-grid', {
+                            itemSelector: '.gallery-item',
+                            columnWidth: '.gallery-item',
+                            percentPosition: true
+                        });
+                    }
+
+                    $(document).ready(function() {
+                        var isZoomed = false;
+                        var currentIndex = 0;
+                        var totalImages = <?= count($album->images); ?>;
+
+                        $('.gallery-item a').click(function() {
+                            var imageUrl = $(this).attr('href');
+                            $('#lightboxImage').attr('src', imageUrl).removeClass('zoomed');
+                            currentIndex = $(this).parent().index();
+                        });
+
+                        $('#nextButton').click(function() {
+                            currentIndex = (currentIndex + 1) % totalImages;
+                            updateLightboxImage();
+                        });
+
+                        $('#prevButton').click(function() {
+                            currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+                            updateLightboxImage();
+                        });
+
+                        function updateLightboxImage() {
+                            var imageUrl = $('.gallery-item').eq(currentIndex).find('a').attr('href');
+                            $('#lightboxImage').attr('src', imageUrl).removeClass('zoomed');
+                        }
+
+                        $('#lightboxImage').click(function(e) {
+                            isZoomed = !isZoomed;
+                            $(this).toggleClass('zoomed', isZoomed);
+                            var x = e.pageX - $(this).offset().left;
+                            var y = e.pageY - $(this).offset().top;
+                            $(this).css('transform-origin', x + 'px ' + y + 'px');
+                        });
+                    });
+                </script>
                 @endforeach
                 @endforeach
                 @endforeach

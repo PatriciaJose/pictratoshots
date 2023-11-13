@@ -45,80 +45,71 @@
         </div>
 
         <script>
-    const photoInput = document.getElementById('photoUpload');
-    const photoPreviews = document.getElementById('photoPreviews');
-    const noImageChosen = document.getElementById('noImageChosen');
-    let selectedFiles = [];
+            const photoInput = document.getElementById('photoUpload');
+            const photoPreviews = document.getElementById('photoPreviews');
+            const noImageChosen = document.getElementById('noImageChosen');
+            let selectedFiles = [];
 
-    photoInput.addEventListener('change', function (e) {
-        const newFiles = Array.from(this.files);
+            photoInput.addEventListener('change', function(e) {
+                const newFiles = Array.from(this.files);
 
-        // Add newly selected files to the existing selectedFiles array
-        selectedFiles = selectedFiles.concat(newFiles);
+                selectedFiles = selectedFiles.concat(newFiles);
 
-        // Display previews for all selected files
-        displayPreviews();
+                displayPreviews();
 
-        // Update the file input to include all selected files
-        const newFileList = new DataTransfer();
-        selectedFiles.forEach((file) => newFileList.items.add(file));
-        photoInput.files = newFileList.files;
-    });
+                const newFileList = new DataTransfer();
+                selectedFiles.forEach((file) => newFileList.items.add(file));
+                photoInput.files = newFileList.files;
+            });
 
-    function displayPreviews() {
-        // Clear existing previews
-        photoPreviews.innerHTML = '';
+            function displayPreviews() {
+                photoPreviews.innerHTML = '';
 
-        if (selectedFiles.length > 0) {
-            noImageChosen.style.display = 'none';
-        } else {
-            noImageChosen.style.display = 'block';
-        }
+                if (selectedFiles.length > 0) {
+                    noImageChosen.style.display = 'none';
+                } else {
+                    noImageChosen.style.display = 'block';
+                }
 
-        // Display previews for all selected files
-        selectedFiles.forEach((file) => {
-            const reader = new FileReader();
+                selectedFiles.forEach((file) => {
+                    const reader = new FileReader();
 
-            reader.onload = function (e) {
-                const preview = document.createElement('div');
-                preview.classList.add('col-md-4', 'position-relative');
-                preview.style.marginTop = '20px';
+                    reader.onload = function(e) {
+                        const preview = document.createElement('div');
+                        preview.classList.add('col-md-4', 'position-relative');
+                        preview.style.marginTop = '20px';
 
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.classList.add('img-fluid');
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.classList.add('img-fluid');
 
-                const removeButton = document.createElement('button');
-                removeButton.innerText = 'X';
-                removeButton.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'position-absolute', 'top-0', 'end-0');
+                        const removeButton = document.createElement('button');
+                        removeButton.innerText = 'X';
+                        removeButton.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'position-absolute', 'top-0', 'end-0');
 
-                removeButton.addEventListener('click', function () {
-                    // Remove the preview
-                    photoPreviews.removeChild(preview);
+                        removeButton.addEventListener('click', function() {
+                            photoPreviews.removeChild(preview);
 
-                    // Remove the file from the selectedFiles array
-                    selectedFiles = selectedFiles.filter((selectedFile) => selectedFile !== file);
+                            selectedFiles = selectedFiles.filter((selectedFile) => selectedFile !== file);
 
-                    // Update the file input to exclude the removed file
-                    const newFileList = new DataTransfer();
-                    selectedFiles.forEach((file) => newFileList.items.add(file));
-                    photoInput.files = newFileList.files;
+                            const newFileList = new DataTransfer();
+                            selectedFiles.forEach((file) => newFileList.items.add(file));
+                            photoInput.files = newFileList.files;
 
-                    // If no files are selected, display the "No Image Preview" message
-                    if (selectedFiles.length === 0) {
-                        noImageChosen.style.display = 'block';
-                    }
+                            if (selectedFiles.length === 0) {
+                                noImageChosen.style.display = 'block';
+                            }
+                        });
+
+                        preview.appendChild(img);
+                        preview.appendChild(removeButton);
+                        photoPreviews.appendChild(preview);
+                    };
+
+                    reader.readAsDataURL(file);
                 });
-
-                preview.appendChild(img);
-                preview.appendChild(removeButton);
-                photoPreviews.appendChild(preview);
-            };
-
-            reader.readAsDataURL(file);
-        });
-    }
-</script>
+            }
+        </script>
 
 
         <div class="card mt-3">

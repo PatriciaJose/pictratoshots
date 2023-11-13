@@ -10,6 +10,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="createAlbumModal" tabindex="-1" aria-labelledby="createAlbumModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -42,7 +43,6 @@
                 </div>
             </div>
         </div>
-
         <div class="card mt-3">
             <div class="card-body">
                 <table id='table_id' class='display mx'>

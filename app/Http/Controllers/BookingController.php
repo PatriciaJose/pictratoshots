@@ -16,10 +16,13 @@ class BookingController extends Controller
 {
     public function showBookings()
     {
-        $bookings = Booking::where('clientID', auth()->user()->id)->get();
+        $bookings = Booking::where('clientID', auth()->user()->id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
         return view('clients.my-bookings', compact('bookings'));
     }
+
 
     public function showBookingForm($packageId)
     {
@@ -151,7 +154,7 @@ class BookingController extends Controller
             $notification->bookingID = $booking->id;
             $notification->save();
 
-            return redirect()->back()->with('message', 'Booking status updated successfully.');
+            return redirect()->back()->with('message', 'Your booking cancellation has been processed successfully.');
         }
     }
 
@@ -178,6 +181,6 @@ class BookingController extends Controller
 
         Booking::find($id)->update($data);
 
-        return redirect()->back()->with('success', 'Bookings updated successfully');
+        return redirect()->back()->with('message', 'Bookings updated successfully');
     }
 }

@@ -2,17 +2,27 @@
     <div class="dashboard-main">
         <div class="container">
             <div class="card my-3">
-                <div class="card-body">
+                <div class="card-body d-flex justify-content-between">
                     <h2>Booking Management</h2>
+
                 </div>
             </div>
-            <div class="card">
+            <div class="card w-25 p-1">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#" id="calendarTab">Calendar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="listTab">List</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card mt-3" id="calendarContainer">
                 <div class="card-body">
                     <div id='calendar'></div>
                 </div>
             </div>
-
-            <div class="card mt-5">
+            <div class="card mt-3" id="listContainer" style="display: none;">
                 <div class="card-body">
                     <table id='table_id' class='display mx'>
                         <thead>
@@ -172,7 +182,27 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $(document).ready(function() {
+                $("#calendarTab").click(function() {
+                    $("#calendarTab").addClass("active");
+                    $("#listTab").removeClass("active");
+                    $("#calendarContainer").show();
+                    $("#listContainer").hide();
+                });
 
+                $("#listTab").click(function() {
+                    $("#listTab").addClass("active");
+                    $("#calendarTab").removeClass("active");
+                    $("#calendarContainer").hide();
+                    $("#listContainer").show();
+                });
+
+                $('#calendar').fullCalendar({});
+            });
+        });
+    </script>
     <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

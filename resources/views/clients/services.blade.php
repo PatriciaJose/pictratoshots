@@ -1,53 +1,48 @@
 <x-app-layout>
-    <div class="container mt-5 pt-5">
-        <h1 class="text-center">Photoshoot Packages</h1>
-    </div>
-    <div class="container-fluid">
-        <div class="container p-5">
-            <!-- Tab Navigation -->
-            <ul class="nav nav-tabs nav-justified" id="packageTabs" role="tablist">
-                @foreach ($photoshootTypes as $type)
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link @if ($loop->first) active @endif" id="type-{{ $type->id }}-tab" data-bs-toggle="tab" href="#type-{{ $type->id }}" role="tab" aria-controls="type-{{ $type->id }}" aria-selected="@if ($loop->first) true @else false @endif">
-                        {{ $type->type_name }}
-                    </a>
-                </li>
-                @endforeach
-            </ul>
-
-            <!-- Tab Content -->
-            <div class="tab-content" id="packageTabContent">
-                @foreach ($photoshootTypes as $type)
-                <div class="tab-pane fade @if ($loop->first) show active @endif" id="type-{{ $type->id }}" role="tabpanel" aria-labelledby="type-{{ $type->id }}-tab">
-                    <div class="row mt-5">
-                        @foreach ($packages as $package)
-                        @if ($package->typeID === $type->id)
-                        <div class="col-lg-4 col-md-12 mb-4">
-                            <div class="pricingTable">
-                                <div class="pricingTable-header">
-                                    <h3 class="title">{{ $package->package_name }}</h3>
-                                    <span class="price-value">
-                                        Php {{ $package->price }}
-                                    </span>
-                                </div>
-                                @php
-                                $inclusions = explode(',', $package->inclusions);
-                                @endphp
-                                <ul class="p-3">
-                                    @foreach ($inclusions as $inclusion)
-                                    <li>{{ $inclusion }}</li>
-                                    @endforeach
-                                </ul>
-                                <a href="{{ route('booking.form', ['packageId' => $package->id]) }}" class="text-dark">Schedule a Session</a>
+    <div class="container mt-5 p-5">
+        <small class="mt-3 ms-1">Our Services</small>
+        <h1>Photoshoot Packages</h1>
+        <ul class="nav nav-tabs nav-justified mt-3" id="packageTabs" role="tablist">
+            @foreach ($photoshootTypes as $type)
+            <li class="nav-item" role="presentation">
+                <a class="nav-link @if ($loop->first) active @endif" id="type-{{ $type->id }}-tab" data-bs-toggle="tab" href="#type-{{ $type->id }}" role="tab" aria-controls="type-{{ $type->id }}" aria-selected="@if ($loop->first) true @else false @endif">
+                    {{ $type->type_name }}
+                </a>
+            </li>
+            @endforeach
+        </ul>
+        <div class="tab-content" id="packageTabContent">
+            @foreach ($photoshootTypes as $type)
+            <div class="tab-pane fade @if ($loop->first) show active @endif" id="type-{{ $type->id }}" role="tabpanel" aria-labelledby="type-{{ $type->id }}-tab">
+                <div class="row mt-5">
+                    @foreach ($packages as $package)
+                    @if ($package->typeID === $type->id)
+                    <div class="col-lg-4 col-md-12 mb-4">
+                        <div class="pricingTable">
+                            <div class="pricingTable-header">
+                                <h3 class="title">{{ $package->package_name }}</h3>
+                                <span class="price-value">
+                                    Php {{ $package->price }}
+                                </span>
                             </div>
+                            @php
+                            $inclusions = explode(',', $package->inclusions);
+                            @endphp
+                            <ul class="p-3">
+                                @foreach ($inclusions as $inclusion)
+                                <li>{{ $inclusion }}</li>
+                                @endforeach
+                            </ul>
+                            <a href="{{ route('booking.form', ['packageId' => $package->id]) }}" class="text-dark">Schedule a Session</a>
                         </div>
-                        @endif
-                        @endforeach
                     </div>
+                    @endif
+                    @endforeach
                 </div>
-                @endforeach
             </div>
+            @endforeach
         </div>
+    </div>
     </div>
     @if (Session::has('message'))
     <script>
@@ -67,7 +62,26 @@
     </script>
     <style>
         .nav-link {
-            color: #9D0520;
+            font-size: small;
+            color:  #9D0520;
+            padding: 10px 15px;
+            border-radius: 5px 5px 0 0;
+            border-bottom: none;
+        }
+
+        .nav-link:hover {
+            color: black;
+        }
+
+        .nav-link.active {
+            font-weight: 900;
+            color: black !important;
+            border-bottom: none !important;
+        }
+
+
+        .nav-tabs {
+            border-bottom: 2px solid #9D0520;
         }
 
         .pricingTable,
