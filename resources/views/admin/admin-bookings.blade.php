@@ -39,7 +39,7 @@
                         <thead>
                             <tr>
                                 <th>Package Name</th>
-                                <th>Client's Email</th>
+                                <th style="width:5%">Client's Email</th>
                                 <th>Session Date</th>
                                 <th>Session Time</th>
                                 <th>Location</th>
@@ -271,7 +271,7 @@
                                                                 showCancelButton: true,
                                                                 confirmButtonColor: 'green',
                                                                 cancelButtonColor: 'grey',
-                                                                confirmButtonText: 'Notify!',
+                                                                confirmButtonText: 'Notify',
                                                             }).then((result) => {
                                                                 if (result.isConfirmed) {
                                                                     $.ajax({
@@ -315,7 +315,7 @@
                                                     showCancelButton: true,
                                                     confirmButtonColor: 'green',
                                                     cancelButtonColor: 'grey',
-                                                    confirmButtonText: 'Yes'
+                                                    confirmButtonText: 'Mark as Done'
                                                 }).then((result) => {
                                                     if (result.isConfirmed) {
                                                         document.getElementById('status_' + bookingId).value = 'Finish';
@@ -331,11 +331,31 @@
                                     $ratingFormExists = App\Models\RatingForm::where('bookingID', $booking->id)->exists();
                                     @endphp
                                     @if (!$ratingFormExists)
-                                    <form action="{{ route('send-rating-form') }}" method="post">
+                                    <form id="ratingForm_{{ $booking->id }}" action="{{ route('send-rating-form') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                        <button type="submit" class="btn btn-info btn-sm">Send Rating Form</button>
+                                        <button type="button" class="btn btn-info btn-sm" onclick="confirmAllowRatings('{{ $booking->id }}')">Allow Ratings</button>
                                     </form>
+
+                                    <script>
+                                        function confirmAllowRatings(bookingId) {
+                                            Swal.fire({
+                                                title: 'Are you sure?',
+                                                text: 'You are about to allow this user to rating this booking.',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: 'green',
+                                                cancelButtonColor: 'grey',
+                                                confirmButtonText: 'Send Rating Form'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    document.getElementById('ratingForm_' + bookingId).submit();
+                                                }
+                                            });
+                                        }
+                                    </script>
+
+
                                     @endif
                                     @endif
                                 </td>
