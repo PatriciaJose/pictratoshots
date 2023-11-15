@@ -176,9 +176,9 @@
                     text: 'You are about to submit the form',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: 'green',
+                    confirmButtonColor: 'blue',
                     cancelButtonColor: 'grey',
-                    confirmButtonText: 'Save Changes'
+                    confirmButtonText: 'Save'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $(this).off('submit').submit();
@@ -197,7 +197,7 @@
                     text: 'You want to delete this album',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: 'green',
+                    confirmButtonColor: 'red',
                     cancelButtonColor: 'grey',
                     confirmButtonText: 'Delete'
                 }).then((result) => {
@@ -226,10 +226,6 @@
             });
         });
     </script>
-
-
-
-
     <script>
         let dataTable
         $(document).ready(function() {

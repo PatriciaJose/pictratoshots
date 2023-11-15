@@ -22,7 +22,7 @@ class EventController extends Controller
 
         PhotoshootType::create($data);
 
-        return redirect()->route('event.index')->with('success', 'Package created successfully');
+        return redirect()->route('event.index')->with('message', 'Event type created successfully');
     }
     public function updateEvent(Request $request)
     {
@@ -34,14 +34,14 @@ class EventController extends Controller
 
         $type->save();
 
-        return redirect()->back()->with('success', 'type updated successfully');
+        return redirect()->back()->with('message', 'Event type updated successfully');
     }
     public function deleteEvent($id)
     {
-        $types =PhotoshootType::findOrFail($id);
-
+        $types = PhotoshootType::findOrFail($id);
         $types->delete();
-
+    
         return response()->json(['success' => true]);
     }
+    
 }

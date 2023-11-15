@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="modal fade" id="createEventModal" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="createEventModalLabel">Create New Package</h5>
@@ -36,6 +36,26 @@
                 </div>
             </div>
         </div>
+        <script>
+            $(document).ready(function() {
+                $('#createEventModal form').submit(function(event) {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You want to create this event type',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: 'green',
+                        cancelButtonColor: 'grey',
+                        confirmButtonText: 'Create'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $(this).off('submit').submit();
+                        }
+                    });
+                });
+            });
+        </script>
         <div class="card mt-3">
             <div class="card-body">
                 <table id='table_id' class='display mx'>
@@ -68,9 +88,8 @@
             </div>
         </div>
     </div>
-    <!-- Edit Event Modal -->
     <div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editEventModalLabel">Edit Event Type</h5>
@@ -91,16 +110,30 @@
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save Changes</button> </form>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button> </form>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
         $(document).ready(function() {
-            $('#table_id').DataTable();
+            $('#editEventModal form').submit(function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You want to save changes to this event type',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'blue',
+                    cancelButtonColor: 'grey',
+                    confirmButtonText: 'Save'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(this).off('submit').submit();
+                    }
+                });
+            });
 
             $('.edit-types-btn').click(function() {
                 var typeId = $(this).data('types-id');
@@ -113,27 +146,63 @@
 
                 $('#editEventModal').modal('show');
             });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
             $('.delete-types-btn').click(function() {
                 const typeId = $(this).data('types-id');
 
-                if (confirm("Are you sure you want to delete this type?")) {
-                    $.ajax({
-                        type: 'DELETE',
-                        url: '/event/' + typeId,
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                location.reload();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You want to delete this event type',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'red',
+                    cancelButtonColor: 'grey',
+                    confirmButtonText: 'Delete'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: '/event/' + typeId,
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                toastr.options = {
+                                    "progressBar": true,
+                                    "closeButton": true,
+                                };
+                                toastr.success('Event type deleted successfully.', "Success!", {
+                                    timeOut: 3000,
+                                    onHidden: function() {
+                                        $('.delete-types-btn[data-types-id="' + typeId + '"]').closest('.event-type-container').remove();
+                                        location.reload();
+                                    }
+                                });
                             }
-                        }
-                    });
-
-                }
+                        });
+                    }
+                });
             });
-
         });
     </script>
-
+    <script>
+        $(document).ready(function() {
+            $('#table_id').DataTable();
+        });
+    </script>
+    @if (Session::has('message'))
+    <script>
+        console.log("Toastr code is executing.");
+        toastr.options = {
+            "progressBar": true,
+            "closeButton": true,
+        }
+        toastr.success("{{ Session::get('message') }}", "Success!", {
+            timeOut: 3000
+        });
+    </script>
+    @endif
 </x-admin-layout>

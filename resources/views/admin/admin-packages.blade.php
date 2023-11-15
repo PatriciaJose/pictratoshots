@@ -63,7 +63,7 @@
                         showCancelButton: true,
                         confirmButtonColor: 'green',
                         cancelButtonColor: 'grey',
-                        confirmButtonText: 'Create Package'
+                        confirmButtonText: 'Create'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $(this).off('submit').submit();
@@ -130,7 +130,7 @@
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
                 cancelButtonText: 'Cancel',
-                confirmButtonColor: 'green',
+                confirmButtonColor: 'red',
                 cancelButtonColor: 'grey',
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -218,12 +218,11 @@
                     text: 'You want to save changes to this package',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: 'green',
+                    confirmButtonColor: 'blue',
                     cancelButtonColor: 'grey',
-                    confirmButtonText: 'Save Changes'
+                    confirmButtonText: 'Save'
                 }).then((result) => {
                     if (result.isConfirmed) {
-
                         $(this).off('submit').submit();
                     }
                 });
@@ -231,7 +230,6 @@
         });
     </script>
     @endforeach
-
     <script>
         $(document).ready(function() {
             $('#table_id').DataTable();
