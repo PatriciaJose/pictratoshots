@@ -62,7 +62,7 @@ class GalleryController extends Controller
         }
 
 
-        return redirect()->back()->with('success', 'Photos uploaded successfully');
+        return redirect()->back()->with('message', 'Photos uploaded successfully');
     }
     public function updateAlbum(Request $request)
     {
@@ -74,7 +74,7 @@ class GalleryController extends Controller
 
         $album->save();
 
-        return redirect()->back()->with('success', 'Album updated successfully');
+        return redirect()->back()->with('message', 'Album updated successfully');
     }
     public function deleteAlbum($id)
     {
@@ -87,10 +87,9 @@ class GalleryController extends Controller
             $image->delete();
         }
 
-
         $album->delete();
 
-        return response()->json(['success' => true]);
+        return redirect()->back()->with('success', 'Album deleted successfully');
     }
     public function storeAlbum(Request $request)
     {
@@ -106,16 +105,14 @@ class GalleryController extends Controller
         $album->typeID = $request->input('album_type');
         $album->save();
 
-        return redirect()->back()->with('success', 'Album created successfully');
+        return redirect()->back()->with('message', 'Album created successfully');
     }
     public function deleteImage($id)
     {
         $image = Gallery::findOrFail($id);
 
-        // Delete the image file from storage
         Storage::delete('public/images/photoshoots/' . $image->image_path);
 
-        // Delete the image record from the database
         $image->delete();
 
         return response()->json(['success' => true]);

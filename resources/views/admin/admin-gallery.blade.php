@@ -12,7 +12,7 @@
         </div>
 
         <div class="modal fade" id="createAlbumModal" tabindex="-1" aria-labelledby="createAlbumModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <form id="createAlbumForm" method="POST" action="{{ route('albums.store') }}">
                         @csrf
@@ -24,25 +24,61 @@
                             <div class="mb-3">
                                 <label for="createAlbumName" class="form-label">Album Name</label>
                                 <input type="text" class="form-control" id="createAlbumName" name="album_name">
+                                <span id="createAlbumNameError" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
                                 <label for="createAlbumType" class="form-label">Type</label>
                                 <select class="form-select" id="createAlbumType" name="album_type">
-                                    <!-- Populate the select options with available types -->
                                     @foreach ($photoshootTypes as $type)
                                     <option value="{{ $type->id }}">{{ $type->type_name }}</option>
                                     @endforeach
                                 </select>
+                                <span id="createAlbumTypeError" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Create Album</button>
+                            <button type="button" class="btn btn-primary" onclick="confirmCreateAlbum()">Create Album</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+
+        <script>
+            function confirmCreateAlbum() {
+                document.getElementById('createAlbumNameError').innerText = '';
+                document.getElementById('createAlbumTypeError').innerText = '';
+
+                var albumName = document.getElementById('createAlbumName').value;
+                var albumType = document.getElementById('createAlbumType').value;
+
+                if (!albumName) {
+                    document.getElementById('createAlbumNameError').innerText = 'Please enter the album name.';
+                    return;
+                }
+
+                if (!albumType) {
+                    document.getElementById('createAlbumTypeError').innerText = 'Please select the album type.';
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Do you want to create the album?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: 'green',
+                    cancelButtonColor: 'grey',
+                    confirmButtonText: 'Create'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('createAlbumForm').submit();
+                    }
+                });
+            }
+        </script>
+
         <div class="card mt-3">
             <div class="card-body">
                 <table id='table_id' class='display mx'>
@@ -86,7 +122,7 @@
         </div>
     </div>
     <div class="modal fade" id="editAlbumModal" tabindex="-1" aria-labelledby="editAlbumModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <form id="editAlbumForm" method="POST" action="{{ route('albums.update') }}">
                     @csrf
@@ -104,7 +140,6 @@
                         <div class="mb-3">
                             <label for="editAlbumType" class="form-label">Type</label>
                             <select class="form-select" id="editAlbumType" name="album_type">
-                                <!-- Populate the select options with available types -->
                                 @foreach ($photoshootTypes as $type)
                                 <option value="{{ $type->id }}">{{ $type->type_name }}</option>
                                 @endforeach
@@ -133,27 +168,65 @@
                 $('#editAlbumModal').modal('show');
             });
 
-            $('.delete-album-btn').click(function() {
-                const albumId = $(this).data('album-id');
+            $('#editAlbumForm').submit(function(event) {
+                event.preventDefault();
 
-                if (confirm("Are you sure you want to delete this album?")) {
-                    $.ajax({
-                        type: 'DELETE',
-                        url: '/albums/' + albumId,
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                location.reload();
-                            }
-                        }
-                    });
-
-                }
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You are about to submit the form',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'green',
+                    cancelButtonColor: 'grey',
+                    confirmButtonText: 'Save Changes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(this).off('submit').submit();
+                    }
+                });
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $('.delete-album-btn').click(function() {
+                const albumId = $(this).data('album-id');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You want to delete this album',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'green',
+                    cancelButtonColor: 'grey',
+                    confirmButtonText: 'Delete'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'GET',
+                            url: '/albums/' + albumId,
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                toastr.options = {
+                                    "progressBar": true,
+                                    "closeButton": true,
+                                }
+                                toastr.success('Album deleted successfully.', "Success!", {
+                                    timeOut: 3000,
+                                    onHidden: function() {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
 
 
 
@@ -168,5 +241,16 @@
             });
         });
     </script>
-
+    @if (Session::has('message'))
+    <script>
+        console.log("Toastr code is executing.");
+        toastr.options = {
+            "progressBar": true,
+            "closeButton": true,
+        }
+        toastr.success("{{ Session::get('message') }}", "Success!", {
+            timeOut: 3000
+        });
+    </script>
+    @endif
 </x-admin-layout>

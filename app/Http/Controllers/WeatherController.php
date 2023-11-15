@@ -43,7 +43,7 @@ class WeatherController extends Controller
 
         $approve->save();
 
-        return redirect()->back()->with('message', 'Bookings updated successfully');
+        return redirect()->back()->with('success', 'Bookings updated successfully');
 
     }
 }

@@ -287,7 +287,8 @@
                                                                             notes: userNote,
                                                                         },
                                                                         success: function(response) {
-
+                                                                            toastr.success('Weather updates sent successfully.');
+                                                                            $('#weatherModal').modal('hide');
                                                                         },
                                                                     });
 

@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="uploadModalLabel">Upload Photos</h5>
@@ -150,19 +150,26 @@
                         title: 'Are you sure you want to delete this image?',
                         text: 'You won\'t be able to revert this!',
                         icon: 'warning',
+                        confirmButtonColor: 'red',
+                        cancelButtonColor: 'grey',
                         showCancelButton: true,
-                        confirmButtonText: 'Delete',
                         cancelButtonText: 'Cancel',
-                        reverseButtons: true,
+                        confirmButtonText: 'Delete',
                     }).then((result) => {
                         if (result.isConfirmed) {
                             axios.delete(`/delete-image/${imageId}`)
                                 .then(function(response) {
                                     button.closest('tr').remove();
-                                    Swal.fire('Deleted!', 'The image has been deleted.', 'success');
+                                    toastr.options = {
+                                        "progressBar": true,
+                                        "closeButton": true,
+                                    }
+                                    toastr.success("Image was successfully deleted", "Success!", {
+                                        timeOut: 3000
+                                    });
                                 })
                                 .catch(function(error) {
-                                    Swal.fire('Error', 'An error occurred while deleting the image.', 'error');
+                                    toastr.error('Error', 'An error occurred while deleting the image.', 'error');
                                 });
                         }
                     });

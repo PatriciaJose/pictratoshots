@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="modal fade" id="createPackageModal" tabindex="-1" aria-labelledby="createPackageModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="createPackageModalLabel">Create New Package</h5>
@@ -52,6 +52,26 @@
                 </div>
             </div>
         </div>
+        <script>
+            $(document).ready(function() {
+                $('#createPackageModal form').submit(function(event) {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You want to create this package',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: 'green',
+                        cancelButtonColor: 'grey',
+                        confirmButtonText: 'Create Package'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $(this).off('submit').submit();
+                        }
+                    });
+                });
+            });
+        </script>
         <div class="card mt-3">
             <div class="card-body">
                 <table id='table_id' class='display mx'>
@@ -110,6 +130,8 @@
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
                 cancelButtonText: 'Cancel',
+                confirmButtonColor: 'green',
+                cancelButtonColor: 'grey',
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -120,12 +142,19 @@
                             _method: 'DELETE',
                         },
                         success: function() {
-                            Swal.fire('Deleted!', 'The package has been deleted.', 'success').then(() => {
-                                location.reload();
+                            toastr.options = {
+                                "progressBar": true,
+                                "closeButton": true,
+                            }
+                            toastr.success('Package was deleted successfully.', "Success!", {
+                                timeOut: 3000,
+                                onHidden: function() {
+                                    location.reload();
+                                }
                             });
                         },
                         error: function() {
-                            Swal.fire('Error', 'An error occurred while deleting the package.', 'error');
+                            toastr.error('An error occurred while deleting the package.');
                         },
                     });
                 }
@@ -136,7 +165,7 @@
 
     @foreach($packages as $package)
     <div class="modal fade" id="editPackageModal{{ $package->id }}" tabindex="-1" aria-labelledby="editPackageModalLabel{{ $package->id }}" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editPackageModalLabel{{ $package->id }}">Edit Package</h5>
@@ -180,10 +209,44 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('#editPackageModal{{ $package->id }} form').submit(function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You want to save changes to this package',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'green',
+                    cancelButtonColor: 'grey',
+                    confirmButtonText: 'Save Changes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $(this).off('submit').submit();
+                    }
+                });
+            });
+        });
+    </script>
     @endforeach
+
     <script>
         $(document).ready(function() {
             $('#table_id').DataTable();
         });
     </script>
+    @if (Session::has('message'))
+    <script>
+        console.log("Toastr code is executing.");
+        toastr.options = {
+            "progressBar": true,
+            "closeButton": true,
+        }
+        toastr.success("{{ Session::get('message') }}", "Success!", {
+            timeOut: 3000
+        });
+    </script>
+    @endif
 </x-admin-layout>

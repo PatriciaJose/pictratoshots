@@ -68,7 +68,7 @@ Route::get('/admin/gallery', [GalleryController::class, 'adminGallery'])->name('
 Route::get('/albums/{id}/photos', [GalleryController::class, 'showAlbumPhotos'])->name('albums.photos');
 Route::post('/upload-photos', [GalleryController::class, 'storePhotos'])->name('upload-photos');
 Route::patch('/albums/update', [GalleryController::class, 'updateAlbum'])->name('albums.update');
-Route::delete('/albums/{id}', [GalleryController::class, 'deleteAlbum'])->name('albums.delete');
+Route::get('/albums/{id}', [GalleryController::class, 'deleteAlbum'])->name('albums.delete');
 Route::post('/albums/create', [GalleryController::class, 'storeAlbum'])->name('albums.store');
 Route::delete('/delete-image/{id}', [GalleryController::class, 'deleteImage'])->name('image.delete');
 

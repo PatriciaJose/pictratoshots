@@ -24,7 +24,6 @@ class PackageController extends Controller
         return view('clients.services', compact('packages', 'photoshootTypes', 'selectedType'));
     }
 
-    // admin
     public function packagesManagement()
     {
         $packages = Package::all();
@@ -44,7 +43,7 @@ class PackageController extends Controller
 
         Package::create($data);
 
-        return redirect()->route('package-management')->with('success', 'Package created successfully');
+        return redirect()->route('package-management')->with('message', 'Package created successfully');
     }
     public function update(Request $request, $id)
     {
@@ -58,7 +57,7 @@ class PackageController extends Controller
 
         Package::find($id)->update($data);
 
-        return redirect()->route('package-management')->with('success', 'Package updated successfully');
+        return redirect()->route('package-management')->with('message', 'Package updated successfully');
     }
     public function delete($id)
     {
